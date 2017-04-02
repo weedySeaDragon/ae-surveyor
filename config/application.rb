@@ -9,13 +9,16 @@ require "action_controller/railtie"
 require "action_mailer/railtie"
 require "action_view/railtie"
 require "sprockets/railtie"
+
 # require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+
 module BaseR428DevisePunditBoots
+
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -31,5 +34,18 @@ module BaseR428DevisePunditBoots
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
+
+    I18n.available_locales = ['en']
+
+    config.i18n.default_locale = :en
+    config.i18n.fallbacks = true
+
+    # i18n-js  gem (not installed)
+    # Provides support for localization/translations on the client
+    # utilizing Rails localization.  Uses same translation files.
+    #  config.middleware.use I18n::JS::Middleware
+
   end
+
 end
