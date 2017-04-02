@@ -1,0 +1,7 @@
+<!-- page-title start -->
+<!-- ================ -->
+<% if content_for? :page_title %>  <%# if it's not defined we assume the source will take care of it. %>
+      <h1 class="page-title"><%= yield :page_title %></h1>
+      <!-- <div class="separator-2"></div> -->
+<% end %>
+<!-- page-title end -->

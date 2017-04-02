@@ -1,4 +1,28 @@
 Rails.application.routes.draw do
+
+  filter :locale
+
+
+  devise_for :users
+
+  # users must come after any devise_for :users
+  resources :users
+
+
+  #--------------
+  # For admin user:
+  #
+  as :user do
+    authenticated :user, lambda { |u| u.admin? } do
+      get 'admin', to: 'admin#index'
+      root to: 'admin#index', as: :admin_root
+    end
+
+  end
+
+  root :to => 'users#welcome'
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

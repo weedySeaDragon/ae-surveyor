@@ -55,7 +55,7 @@ development:
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
-test:
+test: &test
   <<: *default
   database: base-r428-devise-pundit-boots_test
 
@@ -83,3 +83,6 @@ production:
   database: base-r428-devise-pundit-boots_production
   username: base-r428-devise-pundit-boots
   password: <%= ENV['BASE-R428-DEVISE-PUNDIT-BOOTS_DATABASE_PASSWORD'] %>
+
+cucumber:
+  <<: *test

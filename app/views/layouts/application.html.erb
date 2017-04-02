@@ -1,14 +1,47 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>BaseR428DevisePunditBoots</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
 
-<%= yield %>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-</body>
+    <title><%= content_for?(:meta_page_title) ? yield(:meta_page_title) : t('default_meta_page_title')%></title>
+
+    <meta name="description" content="<%= content_for?(:meta_description) ? yield(:meta_description) : t('meta_description') %>">
+    <meta name="keywords" content="<%= content_for?(:meta_keywords) ? yield(:meta_keywords) : t('meta_keywords') %>">
+
+
+    <link rel="shortcut icon" image_path=favicon.ico'>
+
+
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+
+    <%= javascript_include_tag 'application' %>
+
+    <%= csrf_meta_tags %>
+
+  </head>
+
+  <body>
+
+    <header>
+      <%= render 'layouts/navigation' %>
+    </header>
+
+
+    <main role="main">
+
+       <%= render 'layouts/flash_messages' %>
+
+       <%= yield %>
+
+    </main>
+
+
+    <footer>
+      <%= render 'layouts/footer' %>
+    </footer>
+
+
+  </body>
+
 </html>

@@ -1,0 +1,251 @@
+
+
+a {
+  color: $blue-links; // = orig  #2199e8; // = primary-color
+  cursor: pointer;
+  line-height: inherit;
+  text-decoration: none;
+
+  &:hover, &:focus {
+    //color: $dark-magenta; // orig: #1585cf;
+    color: $main-nav-color;
+    text-decoration: inherit;
+    background-color: $light-translucent-orange;
+  }
+}
+
+
+
+.header {
+  border: none;
+  padding: 0 0 2em 0;
+
+}
+
+/* 6 Navigations
+----------------------------------------------------------------------------- */
+/* first level menu */
+
+.navbar.navbar-default {
+  background-color: transparent;
+  border: none;
+}
+
+/* line 4163, /Users/ashleyengelund/RubymineProjects/acaroline-ru1/vendor/assets/stylesheets/bootstrap/bootstrap.css */
+.navbar-default {
+  background-color: transparent;
+  border: none;
+}
+
+/* mobile menu toggle button - ensure it has a left margin */
+.header .navbar-default .navbar-toggle {
+  margin-left:  15px;
+}
+
+
+.page-intro {
+  padding: .3rem 0;
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+
+}
+
+h1, .h1 {
+  color: $default-body-color;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+// headings color:
+h1, .h1,
+h2, .h2,
+h3, .h3,
+h4, .h4,
+h5, .h5,
+h6, .h6 { color: $headings-color; }
+
+// override iDea squares
+ul { list-style: disc; }
+
+
+
+
+/* Breadcrumb
+---------------------------------- */
+/* line 2543, /Users/ashleyengelund/RubymineProjects/acaroline-ru1/vendor/assets/stylesheets/iDea/style.scss */
+
+.breadcrumb {
+  padding: 0;
+ // margin-left: -15px;
+}
+
+/* line 4371, /Users/ashleyengelund/RubymineProjects/acaroline-ru1/vendor/assets/stylesheets/bootstrap/bootstrap.css */
+.breadcrumb > li + li:before {
+
+  content: ""; //"/\00a0";  // this is the separator: "/\00a0" = /
+}
+
+
+
+/* Navbar - toggle hamburger menu on the left
+--------------------------------------------- */
+
+@media (min-width: 768px) {
+  /* line 3958, /Users/ashleyengelund/RubymineProjects/acaroline-ru1/vendor/assets/stylesheets/bootstrap/bootstrap.css */
+  .navbar > .container .navbar-brand,
+  .navbar > .container-fluid .navbar-brand {
+    margin-left: -15px;
+  }
+}
+
+/* line 3963, /Users/ashleyengelund/RubymineProjects/acaroline-ru1/vendor/assets/stylesheets/bootstrap/bootstrap.css */
+.header > .pull-right > .navbar-toggle,  .navbar-toggle {
+  position: relative;
+  float: left !important;
+}
+
+.copyright, .copyright a {
+  @extend .text-muted;
+  font-size: 90%;
+}
+
+
+.light .subfooter {
+  background-color: $light-footer-bg-color;
+
+}
+
+.navbar-nav .dropdown li {
+  background-color: $white;
+  color: $theme-base-color;
+}
+
+
+// #navbar-collapse-1 > ul > li:nth-child(2) > ul > li:nth-child(1) > a
+
+
+
+
+/* --------------------------------
+ *    Pagination - circles
+---------------------------------- */
+#pagination {
+  text-align: center;
+  font-size: 0.875rem;
+
+  li.ellipsis {
+    border: none;
+  }
+
+  li,
+  .pagination li {
+    border: 1px solid $medium-gray;
+    border-radius: 50%;
+
+    .current,
+    .pagination a:hover,
+    .pagination button:hover,
+    a, button {
+      border-radius: 50%;
+    }
+
+
+    .skipped_range {
+      border: none;
+      border-radius: 0;
+    }
+    // #pagination > li.ellipsis
+
+    .ellipsis,
+    .ellipsis::after {
+      // no circle around it
+      border: none;
+      border-radius: 0;
+      font-weight: bold;
+    }
+  }
+
+  li.current {
+      font-weight: bold;
+      background-color: white;
+  }
+
+
+}
+
+// <div class="pagination_status">1-20 / 323 </div> // from the wice_grid
+
+
+
+/* Pager
+---------------------------------- */
+ul.pagination,
+ul.pager {
+  margin: 20px 0 40px;
+  text-align: left;
+
+  li {
+    padding: 0;
+    margin: 0 5px 0 0;
+    border-bottom: none;
+    font-size: 12px;
+    display: inline-block;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+    position: relative;
+    line-height: 1;
+    float: none;
+
+    span { float: none; }
+
+  }
+}
+
+//ul.pagination li.current { float: left; }
+// ul.pagination li.current:last-child { float: right; }
+.pagination > li > span,
+.pager .next > a,
+.pager .next > span,
+.pager .previous > a,
+.pager .previous > span,
+.pagination > li > a
+{
+  float: none !important;
+}
+
+
+ul.pagination li > a,
+ul.pager li > a,
+.pagination > li:first-child > a,
+.pagination > li:last-child > a,
+.pagination > li.current {
+  padding: 10px 15px;
+  border: 1px solid #f3f3f3;
+  line-height: 1;
+  background-color: #fafafa;
+  display: inline-block;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+  color: #666666;
+}
+
+ul.pagination li > a:hover {
+  color: #ffffff;
+  background-color: $link-color;
+  border-color: $link-color;
+}
+
+ul.pagination li.active a,
+.pagination > .active > a:hover,
+.pagination > .active > a:focus {
+  color: #ffffff;
+  background-color: $link-color;
+  border-color: $link-color;
+
+}
+ul.pagination li > a:focus {
+  background: none;
+}

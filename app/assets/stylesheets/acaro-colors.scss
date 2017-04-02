@@ -1,0 +1,39 @@
+/**----------------------
+ * @file: foundation6_settings_colors.scss
+ *
+ * @desc: Color Constants used in Foundation6 (and perhaps elsewhere)
+ *
+ * @author: @author Ashley Engelund ashley@ashleycaroline.com github: weedySeaDragon
+ *
+ * @date: 3/29/2016
+ *
+ **----------------------*/
+
+// Color Constants
+// ---------------
+
+// This file ONLY has color constants in it; they are used elsewhere.
+// This file is simple so that it can be easily imported as needed without depending on anything else (any other files)
+
+// This file should be framework agnostic.  No framework specific variables or names should be in here.
+
+
+$dark-magenta: #ff2cbc; // orig #d71eea;
+$blue-links: #2199e8;   // = orig primary-color
+$magenta: #ff2cbc;
+$darker-cyan: #65c2ee;
+$another-blue: #57B3FF;
+
+
+$orange: #e09200;
+
+$white: #fefefe;
+$light-gray: #e6e6e6;
+$medium-gray: #cacaca;
+$dark-gray: #8a8a8a;
+$dark-dark-gray: #555555;
+$dark-dark4-gray: #444444;
+$dark-dark3-gray: #333;
+$black: #0a0a0a;
+
+$opacity-60p-color: rgba(0, 0, 0, 0.06);

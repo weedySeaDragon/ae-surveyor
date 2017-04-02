@@ -1,0 +1,288 @@
+/*
+  @file acaro-iDea-custom.scss
+
+  Ashley's customization of the iDea bootstrap theme
+
+  orig theme credits:
+
+    Theme Name: iDea - Clean & Powerful Bootstrap Theme
+    Author: HtmlCoder
+    Author URI: http://www.htmlcoder.me
+    Author e-mail: htmlcoder.me@gmail.com
+    Version: 1.1.0
+    Created: August 2014
+    License URI: http://support.wrapbootstrap.com/
+*/
+
+@import 'acaro-colors';
+
+
+//-------------
+// TYPOGRAPHY
+
+$font-family-helNeue: "Helvetica Neue", Arial, "Lucida Grande", sans-serif;
+$font-family-sans-serif: "Proxima Nova Regular","Segoe UI",Roboto,"Droid Sans","Helvetica Neue",Arial,sans-serif; //  'Source Sans Pro', "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-openSans: 'Open Sans', sans-serif;
+$font-family-sourceSans: 'Source Sans Pro', "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+
+$font-family-serif:       Georgia, "Times New Roman", Times, serif;
+$font-family-georgia-serif:  Georgia, "Times New Roman", Times, serif;
+
+
+
+// 'PT Serif' is a Google font.  Use this link to load it:
+// '<link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">' !important is a google font
+$font-family-paratype: 'PT Serif', 'Times New Roman', Times, serif;
+
+
+
+
+$body-font-family: $font-family-sourceSans;
+
+// blockquote
+$blockquote-font-family: 'PT Serif', serif;
+
+
+body {  font-family: $body-font-family !important;}
+
+blockquote { font-family: $blockquote-font-family !important;}
+
+
+
+
+
+//-------------
+// COLORS
+
+
+$foundation-palette: (
+        primary: #2199e8,
+        secondary: #777,
+        success: #1dfd2d, // #B1FF4B too neon, // orig: #3adb76, too blue
+        warning: #ffae00,
+        alert: #ec5840,
+);
+
+$primary-color: #2199e8;
+$secondary-color: #777;
+$success-color: #1dfd2d;
+$warning-color: #ffae00;
+$alert-color: #ec5840;
+
+
+// Bootstrap iDea theme main Base color: (default = red)
+$theme-base-color: $magenta !important;                 // orig: #e84c3d;
+$theme-base-color-darker: $dark-magenta !important;     // orig: #cd3c2e;
+
+
+$button-background: $primary-color;
+
+$top-menu-items-color: $dark-dark4-gray;
+
+
+// Color theme/skin: Orange
+$orange: #e09200;							// base color
+$lighter-orange: #ffa500;					// lighter version
+$translucent-orange: rgba(255,165,0,0.7);	// translucent version
+$light-translucent-orange: rgba(255,165,0,0.2);	// translucent version
+
+
+// Color theme/skin: Magenta
+$lighter-magenta: #ff66cf;
+$translucent-magenta: rgba(255, 102, 207, 0.7);	// translucent version
+$light-translucent-magenta:  rgba(255, 102, 207, 0.2);
+
+$base-color: $magenta;
+$lighter-color: $lighter-magenta;
+$translucent-color70: $translucent-magenta;
+
+$main-nav-color: #666666;
+$main-nav-background: #fafafa;
+$navbar-arrow-color: #e5e5e5;
+
+$light-gray-border: #f3f3f3;
+
+$lighter-gray:  #f1f1f1;  // complement of lighter-color; used as the 'opposite' of lighter-color
+
+$default_bg_color: $white;  // default background. Also sed as foreground color on a colored background
+
+
+
+
+//---------------------------
+// Colors  (AE)
+
+// THEME COLORS:
+
+// Main Base color: (default = red)
+$theme-base-color: #e84c3d;
+$theme-base-color-darker:  #cd3c2e;
+
+
+
+$white: #FFFFFF;
+
+$default-body-bg: $white;
+$default-body-color: #666666;
+$default-background-color: #fafafa;
+
+$headings-color: #444;
+
+$smaller-header-font-color: #343434;
+
+
+// links
+$link-color: $theme-base-color;   // this color is used for multiple elements.  search for link-color  TODO: maybe pull this out as a main color?
+$link-hover-color: $theme-base-color-darker;   // slightly darker
+
+
+// Tables
+$table-not-bordered-bottom-color: #f3f3f3;
+
+$table-bg: $default-body-bg;
+
+$table-head-border-bottom-color: $theme-base-color;
+$table-head-background-color: $table-head-border-bottom-color;
+
+$table-bordered-color: $table-head-border-bottom-color;
+
+$table-foot-border-top-color: #f3f3f3;
+
+$table-stripe-bg-color: #fafafa;
+$table-striped-body-odd-bg: #f1f1f1;
+
+$table-striped-body-border: #e8e8e8;
+
+$table-bordered-border-color: #f3f3f3;
+
+$table-dark-not-bordered-bottom-color: #515151;
+
+$table-dark-head-bg-color: #27272a;
+$table-dark-head-border-bottom-color: $table-dark-head-bg-color;
+$table-dark-head-color: #cdcdcd;
+$table-dark-border-top-color: #515151;
+$table-dark-hover-bg-color: #27272a;
+
+
+// 2 Layout
+
+$page-wrapper-bg-color: $default-body-bg;
+
+$header-top-bg-color:  #f1f1f1;
+$header-top-border-color: #dadada;
+$header-top-webkit-box-shadow-color: rgba(0, 0, 0, 0.03);
+$header-top-box-shadow-color: rgba(0, 0, 0, 0.03);
+
+$header-top-dark-bg-color: #27272A;
+$header-top-dark-bottom-color: #000000;
+$header-top-dark-color: #cdcdcd;
+
+$header-border-bottom-color: #eaeaea;
+$header-bg-color: $default-body-bg;
+
+$header-dark-bg-color: $headings-color;
+$header-dark-top-border-color: #515151;
+
+
+$banner-bg-color: #f1f1f1;
+$banner-border-bottom-color: #eaeaea;
+
+$page-intro-bg-color: #fafafa;
+$page-intro-border-bottom-color: #dadada;
+
+
+
+// parallax
+$default-translu-bg-after-bg-color: rgba(232, 76, 61, 0.7);
+
+
+
+
+// mark
+$mark-color: $white;
+$mark-bg-color: $theme-base-color;
+
+$text-muted-color: #999999;
+$text-default-color: $theme-base-color;
+
+$well-bg-color: #f3f3f3;
+
+// Boxed layout
+
+$boxed-box-shadow-color-webkit: #cacaca;
+$boxed-box-shadow-color: #cacaca;
+
+$icons-i-color: #333;
+
+$list-vert-divider-color: #CECECE;
+
+
+
+// Footer
+$footer-color: #999999;
+$footer-h-color: $footer-color;
+$footer-light-color: #666;
+
+// Blog
+
+$blogpost-bg: #fafafa;
+$blogpost-border-color: #f3f3f3;
+
+$blogpost-post-info-bg: $theme-base-color;
+
+//   social links
+$social-link-red: #e84c3d;
+$twitter-blue: #55acee;
+$facebook-blue: #3b5998;
+$googleplus-red: #dd4b39;
+
+$blogpost-footer-bg: #f1f1f1;
+$blogpost-footer-border-top: #e8e8e8;
+
+$blogpost-link-a: #666666;
+$blogpost-link-hover: $theme-base-color;
+
+$blogpost-footer-border: #e8e8e8;
+
+$blogtimeline-timeline-date-label-color: $theme-base-color;
+
+$blogtimeline-timeline-item-before-border-color: $theme-base-color;
+
+
+
+
+// Backgrounds:
+
+
+$default-bg-color: $white; //$theme-base-color;
+
+$footer-bg-color: #262626;
+$footer-border-top-color: #3a3a3a;
+$footer-border-bottom-color: #333333;
+
+$subfooter-bg-color: #000000;
+
+
+$light-footer-bg-color: #f7f7f7;
+$light-footer-border-top-color: #dddddd;
+$light-footer-border-bottom-color: #d1d1d1;
+
+$light-subfooter-bg-color: #e7e7e7;
+
+
+$white-bg-color: $white;
+
+$header-top-white-bg-border-bottom-color: #dadada;
+
+$gray-bg-color: #f1f1f1;
+
+
+// Forms
+
+$default-bg-form-control-bg-color: rgba(0, 0, 0, 0.2);
+$default-bg-form-control-bg-color-box-shadow-webkit: rgba(0, 0, 0, .35);
+$default-bg-form-control-bg-color-box-shadow: rgba(0, 0, 0, .35);
+
+$default-bg-form-control-focus-bg-color:  rgba(0, 0, 0, 0.25);
+

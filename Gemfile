@@ -24,6 +24,7 @@ gem 'jquery-rails'
 
 gem 'turbolinks'
 
+gem 'dotenv'
 
 gem 'bootstrap'   # bootstrap 4
 gem 'rails-assets-tether', '>= 1.1.0'  # for tooltips, popovers positioning
