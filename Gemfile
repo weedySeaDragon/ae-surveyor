@@ -45,9 +45,6 @@ gem 'pundit'
 
 gem 'high_voltage'
 
-
-gem 'survey'
-
 gem 'routing-filter'   # for handling locale filters around routes
 
 
