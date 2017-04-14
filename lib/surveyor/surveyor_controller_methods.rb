@@ -207,9 +207,13 @@ module Surveyor
     def surveyor_index
       surveyor.available_surveys_path
     end
+
+
     def surveyor_finish
-      surveyor.available_surveys_path
+      #surveyor.available_surveys_path
+      take_survey_finished_path  # TODO a calling app or gem should be able to redefine this path as needed
     end
+
 
     def redirect_with_message(path, message_type, message)
       respond_to do |format|
