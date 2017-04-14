@@ -12,8 +12,11 @@ Gem::Specification.new do |s|
   s.post_install_message = %q{Thanks for using surveyor! Remember to run the surveyor generator and migrate your database, even if you are upgrading.}
   s.summary = %q{A rails (gem) plugin to enable surveys in your application}
 
-  s.files         = `git ls-files`.split("\n") - ['irb']
+  s.files = Dir["{app,config,db,doc,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md", "CHANGELOG.md"]
+  #s.files         = `git ls-files`.split("\n") - ['irb']
+
   s.test_files    = `git ls-files -- {test,spec}/*`.split("\n")
+
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
