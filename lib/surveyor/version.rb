@@ -1,3 +1,4 @@
 module Surveyor
-  VERSION = '1.5.0'
+  # uses ruby version 2.4.0
+  VERSION = '1.5.1'
 end
