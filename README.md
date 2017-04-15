@@ -3,9 +3,13 @@ based on the HeH version of the surveyor gem, these are my modifications to upda
 
 ### Status
 
+current version: 1.5.1
 
 ## Requirements
 
+- ruby 2.4.0
+- Rails >= 4.0
+- see other specific requirements in the `.gemspec`
 
 ---
 ---
@@ -29,7 +33,7 @@ Surveyor is a Rails engine distributed as a ruby gem, meaning it is
 straightforward to override or extend its behaviors in your Rails app
 without maintaining a fork.
 
-## Requirements
+## Requirements *(for OLDER versions of the gem)*
 
 Surveyor works with:
 

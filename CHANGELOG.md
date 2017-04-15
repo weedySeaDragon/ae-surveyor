@@ -1,8 +1,23 @@
 History for Surveyor
 ====================
 
+
+1.5.1
+----
+- ruby 2.4.0
+
+
+
 1.5.0
 -----
+
+- ruby 2.3.1
+- `preamble` attributed required in both `Survey` and `Question` models (must exist in the database)
+
+
+----
+
+***From HeH surveyor and original NUBIC surveyor versions:***
 
 ### Features
 
