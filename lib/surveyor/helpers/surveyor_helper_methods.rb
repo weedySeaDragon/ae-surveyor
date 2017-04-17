@@ -53,7 +53,7 @@ module Surveyor
 
         question_text_class = 'question_text'
 
-        q_text_span = "<span class='#{question_text_class}'>#{q.text_for(nil, context, locale)})</span>"
+        q_text_span = "<span class='#{question_text_class}'>#{q.text_for(nil, context, locale)}</span>"
 
         q_next_num_span = if q.dependent? or q.display_type == "label" or q.display_type == "image" or q.part_of_group? then
                             ''
