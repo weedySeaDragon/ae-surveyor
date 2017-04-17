@@ -50,13 +50,28 @@ module Surveyor
 
       # Questions
       def q_text(q, context=nil, locale=nil)
-        "#{next_question_number(q) unless (q.dependent? or q.display_type == "label" or q.display_type == "image" or q.part_of_group?)}#{q.text_for(nil, context, locale)}"
+
+        question_text_class = 'question_text'
+
+        q_text_span = "<span class='#{question_text_class}'>#{q.text_for(nil, context, locale)})</span>"
+
+        q_next_num_span = if q.dependent? or q.display_type == "label" or q.display_type == "image" or q.part_of_group? then
+                            ''
+                          else
+                            next_question_number(q)
+                          end
+
+        "#{q_next_num_span}#{q_text_span}"
+
       end
 
 
       def next_question_number(question)
+
+        question_number_class = 'qnum'
+
         @n ||= 0
-        "<span class='qnum'>#{@n += 1}) </span>"
+        "<span class='#{question_number_class}'>#{@n += 1}) </span>"
       end
 
 
