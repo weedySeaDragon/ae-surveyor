@@ -12,7 +12,8 @@ Gem::Specification.new do |s|
   s.post_install_message = %q{Thanks for using surveyor! Remember to run the surveyor generator and migrate your database, even if you are upgrading.}
   s.summary = %q{A rails (gem) plugin to enable surveys in your application}
 
-  s.files = Dir["{app,config,db,doc,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md", "CHANGELOG.md"]
+  s.files = Dir["{app,config,db,doc,lib}/**/*"]  + Dir['tasks/*.rake'] + ["MIT-LICENSE", "Rakefile", "README.md", "CHANGELOG.md"]
+
   #s.files         = `git ls-files`.split("\n") - ['irb']
 
   s.test_files    = `git ls-files -- {test,spec}/*`.split("\n")
@@ -31,15 +32,15 @@ Gem::Specification.new do |s|
   s.add_development_dependency('yard')
   s.add_development_dependency('rake')
   s.add_development_dependency('sqlite3')
-  s.add_development_dependency('bundler', '~> 1.14.3')
+  s.add_development_dependency('bundler')
   s.add_development_dependency('rspec-rails')
 
   s.add_development_dependency('capybara', '~> 2.2.1')
   s.add_development_dependency('launchy', '~> 2.4.2')
   s.add_development_dependency('poltergeist', '~>1.5.0')
-  s.add_development_dependency('json_spec', '~> 1.1.1')
-  s.add_development_dependency('factory_girl', '~> 4.4.0')
-  s.add_development_dependency('database_cleaner', '~> 1.2.0')
+  s.add_development_dependency('json_spec')
+  s.add_development_dependency('factory_girl')
+  s.add_development_dependency('database_cleaner')
   s.add_development_dependency('rspec-retry')
 end
 

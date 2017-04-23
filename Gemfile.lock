@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    surveyor (1.5.2)
+    surveyor (1.5.3)
       formtastic (~> 2.2.1)
       haml (~> 4.0)
       mustache (~> 0.99)
@@ -69,8 +69,8 @@ GEM
       activesupport (>= 3.0.0)
     formtastic (2.2.1)
       actionpack (>= 3.0)
-    globalid (0.3.7)
-      activesupport (>= 4.1.0)
+    globalid (0.4.0)
+      activesupport (>= 4.2.0)
     haml (4.0.7)
       tilt
     i18n (0.8.1)
@@ -79,7 +79,7 @@ GEM
       rspec (>= 2.0, < 4.0)
     launchy (2.4.3)
       addressable (~> 2.3)
-    libv8 (3.16.14.19)
+    libv8 (3.16.14.19-x86_64-darwin-15)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.4)
@@ -183,11 +183,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 1.14.3)
+  bundler
   capybara (~> 2.2.1)
-  database_cleaner (~> 1.2.0)
-  factory_girl (~> 4.4.0)
-  json_spec (~> 1.1.1)
+  database_cleaner
+  factory_girl
+  json_spec
   launchy (~> 2.4.2)
   poltergeist (~> 1.5.0)
   rails (~> 5.0.0)
