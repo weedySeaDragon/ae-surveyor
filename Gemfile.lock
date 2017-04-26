@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    surveyor (1.5.4)
+    surveyor (1.5.5)
       formtastic (~> 2.2.1)
       haml (~> 4.0)
       mustache (~> 0.99)
@@ -183,7 +183,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler
   capybara (~> 2.2.1)
   database_cleaner
   factory_girl
