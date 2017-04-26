@@ -7,7 +7,7 @@
   <%= surveyor_includes %>
 </head>
 <body>
-  <div id="flash"><%= flash[:notice] %></div>
+  <%= render 'flash_messages' %>
   <%= yield %>
 </body>
 </html>
