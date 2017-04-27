@@ -18,6 +18,13 @@ class SurveyorRadioInput < Formtastic::Inputs::RadioInput
     output << builder.text_field(:response_other, input_html_options_with(choice, :response_other)) if options[:response_class] == "other_and_string"
     output << builder.text_field(response_class_to_method(options[:response_class]), input_html_options_with(choice, options[:response_class])) if %w(date datetime time float integer string other_and_string).include? options[:response_class]
     output << builder.text_area(:text_value, input_html_options_with(choice, :text_value)) if options[:response_class] == "text"
+
+    if options.has_key?(:tooltipinfo) && options[:tooltipinfo].present?
+      output << "<span class='tooltipinfotext'>#{options[:tooltipinfo]}</span>"
+      output << "<span class='sr-only'>#{options[:tooltipinfo]}</span>"
+    end
+
+
     output.html_safe
   end
 
