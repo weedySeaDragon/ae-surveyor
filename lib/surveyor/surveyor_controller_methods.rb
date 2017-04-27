@@ -62,7 +62,7 @@ module Surveyor
     def edit
       # @response_set is set in before_action - set_response_set_and_render_context
       if @response_set
-        @sections = SurveySection.where(survey_id: @response_set.survey_id).includes([:survey, {questions: [{answers: :question}, {question_group: :dependency}, :dependency]}]).to_a
+        @sections = SurveySection.where(survey_id: @response_set.survey_id).includes([:survey, {questions: [{answers: :question}, {question_group: :dependency}, :dependency]}])
         @section = (section_id_from(params) ? @sections.where(id: section_id_from(params)).first : @sections.first) || @sections.first
         @survey = @section.survey
         set_dependents
