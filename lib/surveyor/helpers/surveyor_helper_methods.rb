@@ -8,6 +8,12 @@ module Surveyor
       end
 
 
+      # HTML to display the survey title ( used on app/views/surveyor/edit.html.haml )
+      def survey_title
+        @survey.translation(I18n.locale)[:title]
+      end
+
+
       # Helper for displaying warning/notice/error flash messages
       def flash_messages(types)
         types.map {|type| content_tag(:div, "#{flash[type]}".html_safe, :class => type.to_s)}.join.html_safe
@@ -18,7 +24,7 @@ module Surveyor
       def dependency_explanation_helper(question, response_set)
 
         # Attempts to explain why this dependent question needs to be answered by referenced the dependent question and users response
-        trigger_responses = []
+        trigger_responses   = []
         dependent_questions = Question.find_all_by_id(question.dependency.dependency_conditions.map(&:question_id)).uniq
         response_set.responses.find_all_by_question_id(dependent_questions.map(&:id)).uniq.each do |resp|
           trigger_responses << resp.to_s
@@ -100,13 +106,13 @@ module Surveyor
 
 
       def generate_pick_none_input_html(value, default_value, css_class, response_class, disabled, input_mask, input_mask_placeholder, data_rules)
-        html = {}
-        html[:class] = [response_class, css_class].reject {|c| c.blank?}
-        html[:value] = value.blank? ? default_value : value
+        html            = {}
+        html[:class]    = [response_class, css_class].reject {|c| c.blank?}
+        html[:value]    = value.blank? ? default_value : value
         html[:disabled] = disabled unless disabled.blank?
-        html[:data] = data_rules
+        html[:data]     = data_rules
         if input_mask
-          html[:'data-input-mask'] = input_mask
+          html[:'data-input-mask']             = input_mask
           html[:'data-input-mask-placeholder'] = input_mask_placeholder unless input_mask_placeholder.blank?
         end
         html

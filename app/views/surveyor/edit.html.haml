@@ -9,11 +9,17 @@
     = hidden_field_tag :surveyor_javascript_enabled, false
 
     = render 'partials/section_menu' # unless @sections.size < 3
-    .survey_title= @survey.translation(I18n.locale)[:title]
+
+    .survey_title= survey_title
+
     .previous_section= previous_section
+
     = render 'partials/dependents' unless @dependents.empty?
+
     = render "/partials/section", :f => f
+
     .next_section= next_section
+
   %br
 
 :javascript
