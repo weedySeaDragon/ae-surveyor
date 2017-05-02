@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    surveyor (1.5.7)
+    surveyor (1.5.8)
       formtastic (~> 2.2.1)
       haml (~> 4.0)
       mustache (~> 0.99)

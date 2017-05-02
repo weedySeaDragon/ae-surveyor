@@ -8,6 +8,16 @@ module Surveyor
       end
 
 
+      # Helper for setting the (meta) page title. This can be used in a page
+      # layout to set the title for a surveyor page.
+      # You can override this method to customize it.  You can use information
+      # in the response_set and also use I18n.t() localization.
+      def surveyor_edit_header_page_title(response_set)
+        "#{@section.title}"
+      end
+
+
+
       # HTML to display the survey title ( used on app/views/surveyor/edit.html.haml )
       def survey_title
         @survey.translation(I18n.locale)[:title]
