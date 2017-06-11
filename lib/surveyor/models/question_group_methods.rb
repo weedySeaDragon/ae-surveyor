@@ -18,6 +18,7 @@ module Surveyor
         has_one :dependency
 
         attr_accessible *PermittedParams.new.question_group_attributes if defined? ActiveModel::MassAssignmentSecurity
+
       end
 
 
