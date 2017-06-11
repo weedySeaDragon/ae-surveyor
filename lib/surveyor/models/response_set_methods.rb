@@ -173,6 +173,12 @@ module Surveyor
       end
 
 
+      # ui_hash = parameters
+      # the surveryor_gui gem created an answer type: a grid of checkboxes where many checked boxes for 1 questions are allowed
+      # ( = the grid answer types)
+      # This can create invalid attribute paremeters (malformed) for a Response.  The answer_id can be set to an Array (!) in this case.
+      # So must be able to handle that. (blech).  Will just take the last number in the Array if the answer_id => an Array
+      #
       def update_from_ui_hash(ui_hash)
         transaction do
           ui_hash.each do |ord, response_hash|
@@ -182,16 +188,20 @@ module Surveyor
             existing              = Response.where(:api_id => api_id).first
             updateable_attributes = response_hash.reject {|k, v| k == 'api_id'}
 
+            # this is where we check for an clean up malformed attributes for the answer_id:
+            cleaned_up_answer_attributes =  fix_malformed_answer_ids updateable_attributes
+
             if self.class.has_blank_value?(response_hash)
               existing.destroy if existing
             elsif existing
-              if existing.question_id.to_s != updateable_attributes['question_id']
+              if existing.question_id.to_s != cleaned_up_answer_attributes['question_id']
                 fail "Illegal attempt to change question for response #{api_id}."
               end
 
-              existing.update_attributes(updateable_attributes)
+              existing.update_attributes(cleaned_up_answer_attributes)
             else
-              responses.build(updateable_attributes).tap do |r|
+
+              responses.build(cleaned_up_answer_attributes).tap do |r|
                 r.api_id = api_id
                 r.save!
               end
@@ -203,6 +213,21 @@ module Surveyor
 
 
       protected
+
+      def fix_malformed_answer_ids(attribute_params)
+        ans_key = :answer_id
+
+        fixed_params = attribute_params
+        if attribute_params.fetch(ans_key)
+          answer_id_val = attribute_params[ans_key]
+          if answer_id_val.is_a? Array
+            # remove any blank strings from the Array, arbitrarily use the last value
+            fixed_params[ans_key] = answer_id_val.compact.reject(&:empty?).last
+          end
+        end
+        fixed_params
+      end
+
 
       def dependencies(question_ids = nil)
         question_ids = survey.sections.map(&:questions).flatten.map(&:id) if responses.blank? and question_ids.blank?
