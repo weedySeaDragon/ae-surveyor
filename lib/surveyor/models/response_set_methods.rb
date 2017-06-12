@@ -218,7 +218,7 @@ module Surveyor
         ans_key = :answer_id
 
         fixed_params = attribute_params
-        if attribute_params.fetch(ans_key)
+        if attribute_params.fetch(ans_key, false)
           answer_id_val = attribute_params[ans_key]
           if answer_id_val.is_a? Array
             # remove any blank strings from the Array, arbitrarily use the last value
