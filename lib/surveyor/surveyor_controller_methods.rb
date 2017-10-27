@@ -42,7 +42,7 @@ module Surveyor
         redirect_to(surveyor.edit_my_survey_path(
             :survey_code => @survey.access_code, :response_set_code => @response_set.access_code))
       else
-        flash[:notice] = t('surveyor.Unable_to_find_that_survey')
+        flash[:notice] = t('surveyor.unable_to_find_that_survey')
         redirect_to surveyor_index
       end
 

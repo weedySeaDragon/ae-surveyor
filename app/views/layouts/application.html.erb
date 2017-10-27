@@ -4,10 +4,10 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title><%= content_for?(:meta_page_title) ? yield(:meta_page_title) : t('default_meta_page_title')%></title>
+    <title><%= content_for?(:meta_page_title) ? yield(:meta_page_title) : t('surveyor.default_meta_page_title')%></title>
 
-    <meta name="description" content="<%= content_for?(:meta_description) ? yield(:meta_description) : t('meta_description') %>">
-    <meta name="keywords" content="<%= content_for?(:meta_keywords) ? yield(:meta_keywords) : t('meta_keywords') %>">
+    <meta name="description" content="<%= content_for?(:meta_description) ? yield(:meta_description) : t('surveyor.meta_description') %>">
+    <meta name="keywords" content="<%= content_for?(:meta_keywords) ? yield(:meta_keywords) : t('surveyor.meta_keywords') %>">
 
 
     <link rel="shortcut icon" image_path=favicon.ico'>

@@ -9,7 +9,7 @@ class CreateDependencies < ActiveRecord::Migration
       # Conditional
       t.string :rule
 
-      # Result - TODO: figure out the dependency hook presentation options
+      # Result -
       # t.string :property_to_toggle # visibility, class_name,
       # t.string :effect #blind, opacity
 

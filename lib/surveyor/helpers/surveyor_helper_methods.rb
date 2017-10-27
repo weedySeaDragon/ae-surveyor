@@ -39,8 +39,8 @@ module Surveyor
         response_set.responses.find_all_by_question_id(dependent_questions.map(&:id)).uniq.each do |resp|
           trigger_responses << resp.to_s
         end
-        # TODO I18n translate
-        "&nbsp;&nbsp;You answered &quot;#{trigger_responses.join("&quot; and &quot;")}&quot; to the question &quot;#{dependent_questions.map(&:text).join("&quot;,&quot;")}&quot;"
+
+        "&nbsp;&nbsp;#{I18n.t('surveyor.your_answer')} &quot;#{trigger_responses.join("&quot; and &quot;")}&quot; #{I18n.t('surveyor.to_question')} &quot;#{dependent_questions.map(&:text).join("&quot;,&quot;")}&quot;"
 
       end
 

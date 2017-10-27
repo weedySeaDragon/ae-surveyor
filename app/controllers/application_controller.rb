@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
   end
 
   def user_not_authorized
-    flash[:alert] = t('errors.not_authorized')
+    flash[:alert] = t('surveyor.errors.not_authorized')
     redirect_back(fallback_location: root_path)
   end
 

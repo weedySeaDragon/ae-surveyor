@@ -14,7 +14,7 @@ module Surveyor
 
         # Validations
         validates_presence_of :rule
-        validates_format_of :rule, :with => /\A(?:and|or|\)|\(|[A-Z]|\s)+\Z/ #TODO properly formed parenthesis etc.
+        validates_format_of :rule, :with => /\A(?:and|or|\)|\(|[A-Z]|\s)+\Z/ #TODO properly formed parenthises etc.
         validates_numericality_of :question_id, :if => Proc.new { |d| d.question_group_id.nil? }
         validates_numericality_of :question_group_id, :if => Proc.new { |d| d.question_id.nil? }
 
