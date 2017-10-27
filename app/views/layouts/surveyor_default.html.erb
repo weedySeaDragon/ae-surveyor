@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 
-  <title><%= content_for?(:meta_page_title) ? yield(:meta_page_title) : 'Survey:' +   controller.action_name %></title>
+  <title><%= content_for?(:meta_page_title) ? yield(:meta_page_title) : t('surveyor.survey') +   controller.action_name %></title>
 
   <%= surveyor_includes %>
 

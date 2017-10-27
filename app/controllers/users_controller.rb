@@ -12,9 +12,9 @@ class UsersController < ApplicationController
   def update
 
     if @user.update(user_params)
-      redirect_to @user, notice: t('.success')
+      redirect_to @user, notice: t('surveyor.users.update.success')
     else
-      helpers.flash_message(:alert, t('.error'))
+      helpers.flash_message(:alert, t('surveyor.users.update.error'))
 
       @user.errors.full_messages.each { |err_message| helpers.flash_message(:alert, err_message) }
 
