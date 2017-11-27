@@ -185,26 +185,33 @@ module Surveyor
             api_id = response_hash['api_id']
             fail "api_id missing from response #{ord}" unless api_id
 
-            existing              = Response.where(:api_id => api_id).first
-            updateable_attributes = response_hash.reject {|k, v| k == 'api_id'}
-
-            # this is where we check for an clean up malformed attributes for the answer_id:
-            cleaned_up_answer_attributes =  fix_malformed_answer_ids updateable_attributes
+            existing  = Response.where(:api_id => api_id).first
 
             if self.class.has_blank_value?(response_hash)
               existing.destroy if existing
-            elsif existing
-              if existing.question_id.to_s != cleaned_up_answer_attributes['question_id']
-                fail "Illegal attempt to change question for response #{api_id}."
-              end
-
-              existing.update_attributes(cleaned_up_answer_attributes)
             else
 
-              responses.build(cleaned_up_answer_attributes).tap do |r|
-                r.api_id = api_id
-                r.save!
+              updateable_attributes = response_hash.reject {|k, v| k == 'api_id'}
+
+              # this is where we check for an clean up malformed attributes for the answer_id:
+              cleaned_up_answer_attributes =  fix_malformed_answer_ids updateable_attributes
+              cleaned_up_answer_attributes['survey_section_id'] = Question.find(cleaned_up_answer_attributes['question_id']).survey_section.id
+
+              if existing
+                if existing.question_id.to_s != cleaned_up_answer_attributes['question_id']
+                  fail "Illegal attempt to change question for response #{api_id}."
+                end
+
+                existing.update_attributes(cleaned_up_answer_attributes)
+              else
+
+                responses.build(cleaned_up_answer_attributes).tap do |r|
+                  r.api_id = api_id
+                  #r.survey_section_id = Question.find(cleaned_up_answer_attributes['question_id']).survey_section.id
+                  r.save!
+                end
               end
+
             end
 
           end
