@@ -1,7 +1,11 @@
 $LOAD_PATH << File.expand_path('../lib', __FILE__)
+
 require 'fileutils'
 
 require 'rspec/core/rake_task'
+
+require 'tempfile'
+
 
 ###### RSPEC
 
@@ -18,24 +22,29 @@ task :default => :spec
 desc 'Set up the rails app that the specs and features use'
 task :testbed => 'testbed:rebuild'
 
+
 namespace :testbed do
 
   desc 'Generate a minimal surveyor-using rails app'
   task :generate do
+
     Tempfile.open('surveyor_Rakefile') do |f|
       f.write("application \"config.time_zone='Rome'\"\n")
       f.flush
       sh "bundle exec rails new testbed --skip-bundle -m #{f.path}" # don't run bundle install until the Gemfile modifications
     end
+
     chdir('testbed') do
       gem_file_contents = File.read('Gemfile')
       gem_file_contents.sub!(/^(gem 'rails'.*)$/, %Q{# \\1\nplugin_root = File.expand_path('../..', __FILE__)\neval(File.read File.join(plugin_root, 'Gemfile.rails_version'))\ngem 'surveyor', :path => plugin_root})
-      File.open('Gemfile', 'w'){|f| f.write(gem_file_contents) }
+      File.open('Gemfile', 'w') { |f| f.write(gem_file_contents) }
       Bundler.with_clean_env do
         sh 'bundle install' # run bundle install after Gemfile modifications
       end
     end
+
   end
+
 
   desc 'Prepare the databases for the testbed'
   task :migrate do
@@ -47,10 +56,12 @@ namespace :testbed do
     end
   end
 
+
   desc 'Remove the testbed entirely'
   task :remove do
     rm_rf 'testbed'
   end
+
 
   task :rebuild => [:remove, :generate, :migrate]
 
@@ -63,4 +74,6 @@ namespace :testbed do
       end
     end
   end
+
+
 end
