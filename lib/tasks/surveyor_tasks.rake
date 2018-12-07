@@ -1,7 +1,10 @@
+
 desc "generate and load survey (specify FILE=surveys/your_survey.rb)"
 task :surveyor => :"surveyor:parse"
 
+
 namespace :surveyor do
+  
   task :parse => :environment do
     raise "USAGE: file name required e.g. 'FILE=surveys/kitchen_sink_survey.rb'" if ENV["FILE"].blank?
     file = ENV["FILE"].include?(Rails.root.to_s) ? ENV["FILE"] : File.join(Rails.root, ENV["FILE"])
@@ -10,6 +13,8 @@ namespace :surveyor do
     Surveyor::Parser.parse_file(file, {:trace => Rake.application.options.trace})
     puts "--- Done #{file} ---"
   end
+
+
   desc "generate and load survey from REDCap Data Dictionary (specify FILE=surveys/redcap.csv)"
   task :redcap => :environment do
     raise "USAGE: file name required e.g. 'FILE=surveys/redcap_demo_survey.csv'" if ENV["FILE"].blank?
@@ -19,6 +24,8 @@ namespace :surveyor do
     Surveyor::RedcapParser.parse File.read(file), File.basename(file, ".csv"), {:trace => Rake.application.options.trace}
     puts "--- Done #{file} ---"
   end
+
+
   desc "generate a surveyor DSL file from a survey"
   task :unparse => :environment do
     surveys = Survey.all
@@ -40,6 +47,8 @@ namespace :surveyor do
       puts "There are no surveys available"
     end
   end
+
+
   desc "remove surveys (that don't have response sets)"
   task :remove => :environment do
     surveys = Survey.all.delete_if{|s| !s.response_sets.blank?}
@@ -60,6 +69,8 @@ namespace :surveyor do
       puts "There are no surveys without response sets"
     end
   end
+
+
   desc "dump all responses to a given survey"
   task :dump => :environment do
     require 'fileutils.rb'
@@ -85,4 +96,5 @@ namespace :surveyor do
       survey.response_sets.each_with_index{|r,i| f.write(r.to_csv(true, i == 0)) } # print access code every time, print_header first time
     end
   end
+
 end
