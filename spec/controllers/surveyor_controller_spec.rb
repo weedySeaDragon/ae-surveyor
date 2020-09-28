@@ -6,10 +6,10 @@ describe SurveyorController do
     @routes = Surveyor::Engine.routes
   end
 
-  let!(:survey)           { FactoryGirl.create(:survey, :title => "Alphabet", :access_code => "alpha", :survey_version => 0)}
-  let!(:survey_beta)      { FactoryGirl.create(:survey, :title => "Alphabet", :access_code => "alpha", :survey_version => 1)}
-  let!(:response_set)      { FactoryGirl.create( :response_set, :survey => survey, :access_code => "pdq" )}
-  let!(:response_set_beta) { FactoryGirl.create(:response_set, :survey => survey_beta, :access_code => "rst")}
+  let!(:survey)           { FactoryBot.create(:survey, :title => "Alphabet", :access_code => "alpha", :survey_version => 0)}
+  let!(:survey_beta)      { FactoryBot.create(:survey, :title => "Alphabet", :access_code => "alpha", :survey_version => 1)}
+  let!(:response_set)      { FactoryBot.create( :response_set, :survey => survey, :access_code => "pdq" )}
+  let!(:response_set_beta) { FactoryBot.create(:response_set, :survey => survey_beta, :access_code => "rst")}
 
   before { ResponseSet.stub(:create, response_set) } # orig: .and_return(response_set) }
 
@@ -127,7 +127,7 @@ describe SurveyorController do
 
   context "#edit" do
     def do_get(params = {})
-      survey.sections = [FactoryGirl.create(:survey_section, :survey => survey)]
+      survey.sections = [FactoryBot.create(:survey_section, :survey => survey)]
       get :edit, {:survey_code => "alpha", :response_set_code => "pdq"}.merge(params)
     end
     it "renders edit" do
@@ -145,13 +145,13 @@ describe SurveyorController do
       response.should redirect_to(available_surveys_path)
     end
     it "assigns dependents if javascript not enabled" do
-      controller.stub(:get_unanswered_dependencies_minus_section_questions).and_return([FactoryGirl.create(:question)])
+      controller.stub(:get_unanswered_dependencies_minus_section_questions).and_return([FactoryBot.create(:question)])
       session[:surveyor_javascript].should be_nil
       do_get
       assigns[:dependents].should_not be_empty
     end
     it "does not assign dependents if javascript is enabled" do
-      controller.stub(:get_unanswered_dependencies_minus_section_questions).and_return([FactoryGirl.create(:question)])
+      controller.stub(:get_unanswered_dependencies_minus_section_questions).and_return([FactoryBot.create(:question)])
       session[:surveyor_javascript] = "enabled"
       do_get
       assigns[:dependents].should be_empty
@@ -162,7 +162,7 @@ describe SurveyorController do
       assigns[:survey].should == survey
     end
     it "assigns later survey_version" do
-      survey_beta.sections = [FactoryGirl.create(:survey_section, :survey => survey_beta)]
+      survey_beta.sections = [FactoryBot.create(:survey_section, :survey => survey_beta)]
       do_get :response_set_code => "rst"
       assigns[:survey].should == survey_beta
       assigns[:response_set].should == response_set_beta
@@ -258,9 +258,9 @@ describe SurveyorController do
   end
 
   context "#delete_response" do
-    let(:survey_section) { FactoryGirl.create :survey_section, :survey => survey }
-    let(:question)       { FactoryGirl.create :question, :survey_section => survey_section }
-    let(:answer)         { FactoryGirl.create :answer }
+    let(:survey_section) { FactoryBot.create :survey_section, :survey => survey }
+    let(:question)       { FactoryBot.create :question, :survey_section => survey_section }
+    let(:answer)         { FactoryBot.create :answer }
 
 
     it "should set response_set" do
@@ -325,8 +325,8 @@ describe SurveyorController do
 
     context "without responses" do
       it "should not delete any response when the question has no responses" do
-        another_question = FactoryGirl.create :question, :survey_section => survey_section
-        FactoryGirl.create :response, :response_set => response_set, :question_id => another_question.id, :answer_id => answer.id
+        another_question = FactoryBot.create :question, :survey_section => survey_section
+        FactoryBot.create :response, :response_set => response_set, :question_id => another_question.id, :answer_id => answer.id
         expect do
           delete :delete_response, :survey_code => survey.access_code, :response_set_code => "pdq", :question_id => question.id, :format => :js
         end.to change{ Response.count }.by(0)
