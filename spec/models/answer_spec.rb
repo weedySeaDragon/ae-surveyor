@@ -2,10 +2,12 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Answer do
-  let(:answer){ FactoryBot.create(:answer) }
+  let(:answer) { FactoryBot.create(:answer) }
 
   context "when creating" do
+
     it { answer.should be_valid }
+
     it "deletes validation when deleted" do
       v_id = FactoryBot.create(:validation, :answer => answer).id
       answer.destroy
@@ -15,7 +17,18 @@ describe Answer do
 
   context "with mustache text substitution" do
     require 'mustache'
-    let(:mustache_context){ Class.new(::Mustache){ def site; "Northwestern"; end; def foo; "bar"; end } }
+    let(:mustache_context) { Class.new(::Mustache) {
+      def site
+        "Northwestern";
+      end
+
+
+      ;
+
+
+      def foo
+        "bar";
+      end } }
     it "subsitutes Mustache context variables" do
       answer.text = "You are in {{site}}"
       answer.in_context(answer.text, mustache_context).should == "You are in Northwestern"
@@ -33,9 +46,9 @@ describe Answer do
 
   context "with translations" do
     require 'yaml'
-    let(:survey){ FactoryBot.create(:survey) }
-    let(:survey_section){ FactoryBot.create(:survey_section) }
-    let(:survey_translation){
+    let(:survey) { FactoryBot.create(:survey) }
+    let(:survey_section) { FactoryBot.create(:survey_section) }
+    let(:survey_translation) {
       FactoryBot.create(:survey_translation, :locale => :es, :translation => {
         :questions => {
           :name => {
@@ -48,7 +61,7 @@ describe Answer do
         }
       }.to_yaml)
     }
-    let(:question){ FactoryBot.create(:question, :reference_identifier => "name") }
+    let(:question) { FactoryBot.create(:question, :reference_identifier => "name") }
     before do
       answer.reference_identifier = "name"
       answer.help_text = "My name is..."
@@ -65,7 +78,7 @@ describe Answer do
       answer.help_text_for(nil, :es).should == "Mi nombre es..."
     end
     it "returns its own default values" do
-      answer.translation(:de).should == {"text" => nil, "help_text" => "My name is...", "default_value" => nil}
+      answer.translation(:de).should == { "text" => nil, "help_text" => "My name is...", "default_value" => nil }
     end
     it "returns default values in views" do
       answer.help_text_for(nil, :de).should == "My name is..."
@@ -97,45 +110,65 @@ describe Answer do
   end
 
   context "for views" do
+
     it "#text_for with #display_type == image" do
       answer.text = "rails.png"
       answer.display_type = :image
-      answer.text_for.should =~ /<img alt="Rails" src="\/(images|assets)\/rails\.png" \/>/
+      # answer.text_for.should =~ /<img alt="Rails" src="\/(images|assets)\/rails\.png" \/>/
+      text = answer.text_for
+      expect(text).to match(/<img\s+(.)*\/>/)
+      expect(text).to match(/alt="Rails"/)
+      expect(text).to match(/src="\/(images|assets)\/rails\.png"/)
     end
+
     it "#text_for with #display_type == hidden_label" do
       answer.text = "Red"
       answer.text_for.should == "Red"
       answer.display_type = "hidden_label"
       answer.text_for.should == ""
     end
-    it "#default_value_for"
-    it "#help_text_for"
+
+    it "#default_value_for" do
+      skip
+    end
+
+    it "#help_text_for" do
+      skip
+    end
+
     it "reports DOM ready #css_class from #custom_class" do
       answer.custom_class = "foo bar"
       answer.css_class.should == "foo bar"
     end
+
     it "reports DOM ready #css_class from #custom_class and #is_exclusive" do
       answer.custom_class = "foo bar"
       answer.is_exclusive = true
       answer.css_class.should == "exclusive foo bar"
     end
+
     it "#text_for preserves strings" do
       answer.text_for.should == "My favorite color is clear"
     end
+
     it "#text_for(:pre) preserves strings" do
       answer.text_for(:pre).should == "My favorite color is clear"
     end
+
     it "#text_for(:post) preserves strings" do
       answer.text_for(:post).should == ""
     end
+
     it "#text_for splits strings" do
       answer.text = "before|after|extra"
       answer.text_for.should == "before|after|extra"
     end
+
     it "#text_for(:pre) splits strings" do
       answer.text = "before|after|extra"
       answer.text_for(:pre).should == "before"
     end
+
     it "#text_for(:post) splits strings" do
       answer.text = "before|after|extra"
       answer.text_for(:post).should == "after|extra"
