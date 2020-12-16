@@ -90,7 +90,7 @@ module Surveyor
           report_lost_and_duplicate_references
           report_missing_default_locale
           Surveyor::Parser.rake_trace("", -2)
-          if context[:survey].save
+          if context[:survey].save!
             Surveyor::Parser.rake_trace "Survey saved."
           else
             Surveyor::Parser.raise_error "Survey not saved: #{context[:survey].errors.full_messages.join(", ")}"
@@ -134,14 +134,18 @@ module Surveyor
     end
     def resolve_question_correct_answers
       self.context[:questions_with_correct_answers].each do |question_reference_idenitifer, correct_answer_reference|
-        # Looking up references for quiz answers
-        if self.context[:answer_references][question_reference_idenitifer] &&
-             (a = self.context[:answer_references][question_reference_idenitifer][correct_answer_reference]) &&
-             a.save
-          self.context[:question_references][question_reference_idenitifer].correct_answer_id = a.id
-        else
-          self.context[:bad_references].push "q_#{question_reference_idenitifer}.correct => a_#{correct_answer_reference}"
+        q = self.context[:question_references][question_reference_idenitifer]
+        if q
+          # Looking up references for quiz answers
+          a = self.context[:answer_references][question_reference_idenitifer][correct_answer_reference]
+
+          if a
+            q.correct_answer = a
+          else
+            self.context[:bad_references].push "q_#{question_reference_idenitifer}.correct => a_#{correct_answer_reference}"
+          end
         end
+
       end
     end
     def resolve_dependency_condition_references
@@ -217,6 +221,8 @@ module SurveyorParserSurveySectionMethods
       :title => title,
       :reference_identifier => reference_identifier,
       :display_order => context[:survey].sections.size }.merge(args[1] || {})).survey_section
+
+    self.survey = context[:survey]
     context[:survey].sections << context[:survey_section] = self
   end
   def clear(context)
@@ -281,6 +287,7 @@ module SurveyorParserQuestionMethods
       :display_order => context[:survey_section].questions.size }.merge(hash_args)).question
     self.question_group = context[:question_group]
     context[:survey_section].questions << context[:question] = self
+    self.survey_section = context[:survey_section]
 
     # keep reference for correct answers
     context[:questions_with_correct_answers][self.reference_identifier] = correct unless self.reference_identifier.blank? or correct.blank?
