@@ -4,7 +4,7 @@ task :surveyor => :"surveyor:parse"
 
 
 namespace :surveyor do
-  
+
   task :parse => :environment do
     raise "USAGE: file name required e.g. 'FILE=surveys/kitchen_sink_survey.rb'" if ENV["FILE"].blank?
     file = ENV["FILE"].include?(Rails.root.to_s) ? ENV["FILE"] : File.join(Rails.root, ENV["FILE"])
@@ -72,7 +72,7 @@ namespace :surveyor do
 
 
   desc "dump all responses to a given survey"
-  task :dump => :environment do
+  task :dump_responses => :environment do
     require 'fileutils.rb'
     survey_version = ENV["SURVEY_VERSION"]
     access_code = ENV["SURVEY_ACCESS_CODE"]
