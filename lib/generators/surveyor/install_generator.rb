@@ -6,13 +6,17 @@ module Surveyor
 
     source_root File.expand_path("../templates", __FILE__)
     desc "Generate surveyor README, migrations, assets and sample survey"
+
     class_option :skip_migrations, :type => :boolean, :desc => "skip migrations, but generate everything else"
 
-    SURVEYOR_MIGRATIONS = %w(
+    SURVEYOR_MIGRATIONS = %w[
+      devise_create_users
+      add_name_admin_to_users
       create_surveys
       create_survey_sections
       create_questions
-      create_question_groups create_answers
+      create_question_groups
+      create_answers
       create_response_sets
       create_responses
       create_dependencies
@@ -39,11 +43,14 @@ module Surveyor
       create_survey_translations
       add_input_mask_attributes_to_answer
       add_redirect_url_to_surveys
-    )
+    ].freeze
+
 
     def readme
       copy_file "../../../../README.md", "surveys/README.md"
     end
+
+
     def migrations
       unless options[:skip_migrations]
         check_for_orphaned_migration_files
@@ -58,14 +65,17 @@ module Surveyor
       end
     end
 
+
     def routes
       route('mount Surveyor::Engine => "/surveys", :as => "surveyor"')
     end
+
 
     def assets
       directory "app/assets"
       copy_file "vendor/assets/stylesheets/custom.sass"
     end
+
 
     def surveys
       copy_file "surveys/kitchen_sink_survey.rb"
@@ -75,15 +85,19 @@ module Surveyor
       directory "surveys/translations"
     end
 
+
     def locales
       directory "config/locales"
     end
+
 
     private
 
     def check_for_existing_migrations(name)
       Dir.glob("db/migrate/[0-9]*_*.rb").grep(/[0-9]+_#{name}.rb$/)
     end
+
+
     def check_for_orphaned_migration_files
       migration_files = Dir[File.join(self.class.source_root, 'db/migrate/*.rb')]
       orphans = migration_files.collect { |f| File.basename(f).sub(/\.rb$/, '') } - SURVEYOR_MIGRATIONS
