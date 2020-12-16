@@ -7,16 +7,20 @@ module Surveyor
 
       included do
         # Associations
-        belongs_to :question
-        belongs_to :question_group
-        has_many :dependency_conditions, :dependent => :destroy
+        belongs_to :question, required: false
+        belongs_to :question_group, required: false
+        has_many :dependency_conditions, dependent: :destroy
         attr_accessible *PermittedParams.new.dependency_attributes if defined? ActiveModel::MassAssignmentSecurity
 
         # Validations
         validates_presence_of :rule
-        validates_format_of :rule, :with => /\A(?:and|or|\)|\(|[A-Z]|\s)+\Z/ #TODO properly formed parenthises etc.
-        validates_numericality_of :question_id, :if => Proc.new { |d| d.question_group_id.nil? }
-        validates_numericality_of :question_group_id, :if => Proc.new { |d| d.question_id.nil? }
+        validates_format_of :rule, with: /\A(?:and|or|\)|\(|[A-Z]|\s)+\Z/   # TODO properly formed parentheses etc.
+
+        # validates_numericality_of :question.id, :if => Proc.new { |d| d.question_group_id.nil? }
+        validates_presence_of :question, if: Proc.new { |d| d.question_group.nil? }
+
+        # validates_numericality_of :question_group.i, :if => Proc.new { |d| d.question_id.nil? }
+        validates_presence_of :question_group, if: Proc.new { |d| d.question.nil? }
 
         # Attribute aliases
         alias_attribute :dependent_question_id, :question_id

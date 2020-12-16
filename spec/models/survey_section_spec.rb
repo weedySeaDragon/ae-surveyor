@@ -1,24 +1,28 @@
 # encoding: UTF-8
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'rails_helper'
 
-describe SurveySection do
-    let(:survey_section){ FactoryGirl.create(:survey_section) }
+RSpec.describe SurveySection, type: :model do
+  let(:survey_section){ FactoryBot.create(:survey_section) }
 
   context "when creating" do
     it "is invalid without #title" do
       survey_section.title = nil
-      survey_section.should have(1).error_on(:title)
+      expect(survey_section.valid?).to be_falsey
+      expect(survey_section.errors.details.keys).to match_array([:title])
     end
   end
 
   context "with questions" do
-    let(:question_1){ FactoryGirl.create(:question, :survey_section => survey_section, :display_order => 3, :text => "Peep")}
-    let(:question_2){ FactoryGirl.create(:question, :survey_section => survey_section, :display_order => 1, :text => "Little")}
-    let(:question_3){ FactoryGirl.create(:question, :survey_section => survey_section, :display_order => 2, :text => "Bo")}
+    let(:question_1){ FactoryBot.create(:question, :survey_section => survey_section, :display_order => 3, :text => "Peep")}
+    let(:question_2){ FactoryBot.create(:question, :survey_section => survey_section, :display_order => 1, :text => "Little")}
+    let(:question_3){ FactoryBot.create(:question, :survey_section => survey_section, :display_order => 2, :text => "Bo")}
+
     before do
       [question_1, question_2, question_3].each{|q| survey_section.questions << q }
     end
-    it{ survey_section.should have(3).questions}
+
+    it { expect(survey_section.questions.size).to eq 3 }
+
     it "gets questions in order" do
       survey_section.questions.order("display_order asc").should == [question_2, question_3, question_1]
       survey_section.questions.order("display_order asc").map(&:display_order).should == [1,2,3]
@@ -32,9 +36,9 @@ describe SurveySection do
 
   context "with translations" do
     require 'yaml'
-    let(:survey){ FactoryGirl.create(:survey) }
+    let(:survey){ FactoryBot.create(:survey) }
     let(:survey_translation){
-      FactoryGirl.create(:survey_translation, :locale => :es, :translation => {
+      FactoryBot.create(:survey_translation, :locale => :es, :translation => {
         :survey_sections => {
           :one => {
             :title => "Uno"

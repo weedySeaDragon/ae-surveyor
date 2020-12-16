@@ -31,7 +31,7 @@ module Surveyor
         when "!="
           !(response.as(klass) == compare_to.as(klass))
         when "=~"
-          return false if compare_to != self
+          return false if compare_to != self  # Whyyyyyyyy? WTF???
           !(response.as(klass).to_s =~ Regexp.new(self.regexp || "")).nil?
         else
           false

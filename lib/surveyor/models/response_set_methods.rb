@@ -6,10 +6,14 @@ module Surveyor
       include ActiveModel::ForbiddenAttributesProtection
 
       included do
+
         # Associations
         belongs_to :survey
         belongs_to :user
+
         has_many :responses, -> {includes :answer}, :dependent => :destroy
+
+
         accepts_nested_attributes_for :responses, :allow_destroy => true
         attr_accessible *PermittedParams.new.response_set_attributes if defined? ActiveModel::MassAssignmentSecurity
 
@@ -180,6 +184,7 @@ module Surveyor
       # So must be able to handle that. (blech).  Will just take the last number in the Array if the answer_id => an Array
       #
       def update_from_ui_hash(ui_hash)
+
         transaction do
           ui_hash.each do |ord, response_hash|
             api_id = response_hash['api_id']

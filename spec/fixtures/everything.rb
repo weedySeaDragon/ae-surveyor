@@ -53,6 +53,7 @@ survey "Everything" do
     a_time "I was born at", :time
     a_approx "This time is approximate"
   end
+
   section "Groups" do
     grid_events "How interested are you in the following?" do
       a "indifferent"
@@ -72,6 +73,7 @@ survey "Everything" do
       q_quality "Quality of your relationship"
       a "Quality of your relationship", :string
     end
+
     group_drop_it "Drop it like it's hot" do
       label "Like Snoop Dogg said"
       q_what_drop "What to drop", pick: :one, display_type: :dropdown
@@ -80,6 +82,7 @@ survey "Everything" do
       a_and_10 "And give me 10"
     end
   end
+
   section "Dependencies" do
     group "Greetings" do
       q_anybody "Anybody there?", :pick => :one
@@ -97,6 +100,7 @@ survey "Everything" do
       a "Maybe"
       a "Huh?"
     end
+
     group_anybody_no "No?" do
       dependency :rule => "A"
       condition_A :q_anybody, "==", :a_no
@@ -105,6 +109,7 @@ survey "Everything" do
       a_you_are "You are"
       a_you_nuts "Are you nuts?"
     end
+
     label_feels_like_it "It feels like it"
     dependency :rule => "A"
     condition_A :q_who_talking, "==", :a_you_nuts
@@ -160,6 +165,7 @@ survey "Everything" do
     dependency :rule => "A"
     condition_A :q_counts, "count>2"
   end
+
   section "Special" do
     group_mustache_regarding "Regarding {{name}}", help_text: "Answer all you know about {{name}}" do
       q_mustache_where "Where does {{name}} live?", pick: :one, help_text: "If you don't know where {{name}} lives, skip the question"

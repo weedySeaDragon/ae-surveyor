@@ -78,7 +78,6 @@ module Surveyor
                           end
 
         "#{q_next_num_span}#{q_text_span}"
-
       end
 
 

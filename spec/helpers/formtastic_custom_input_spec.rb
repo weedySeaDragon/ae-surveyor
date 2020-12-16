@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 require File.expand_path(File.dirname(__FILE__) + '/../../lib/surveyor/helpers/formtastic_custom_input')
 
-describe Surveyor::Helpers::FormtasticCustomInput do
+describe Surveyor::Helpers::FormtasticCustomInput, type: :helper do
   context "input helpers" do
     it "should translate response class into attribute" do
       helper.response_class_to_method(:string).should == :string_value
