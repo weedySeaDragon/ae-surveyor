@@ -1,14 +1,18 @@
 # encoding: UTF-8
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'rails_helper'
 
-describe Survey do
+RSpec.describe Survey, type: :model  do
   let(:survey){ FactoryBot.create(:survey) }
 
   context "when creating" do
+
     it "is invalid without #title" do
-      survey.title = nil
-      survey.should have(1).error_on :title
+      invalid_survey = Survey.new(title: nil)
+      expect(invalid_survey.valid?).to be_falsey
+      expect(invalid_survey.errors.details.first.first ).to eq :title
+      # expect(invalid_survey).to have(1).error_on(:title)  # this matcher is not working
     end
+
     it "adjust #survey_version" do
       original = Survey.new(:title => "Foo")
       original.save.should be_truthy
@@ -29,8 +33,10 @@ describe Survey do
       imposter.save.should be_truthy
       imposter.survey_version = 0
       imposter.save.should be_falsey
-      imposter.should have(1).error_on(:survey_version)
+      expect(imposter.errors.details.first.first ).to eq :survey_version
+      # imposter.should have(1).error_on(:survey_version)
     end
+
     it "doesn't adjust #title when" do
       original = FactoryBot.create(:survey, :title => "Foo")
       original.save.should be_truthy
@@ -96,14 +102,20 @@ describe Survey do
       s3.questions << q4
     end
 
-    it{ survey.should have(3).sections}
+    it 'sections are correct' do
+      expect(survey.sections.size).to eq 3
+    end
+
     it "gets survey_sections in order" do
-      survey.sections.order("display_order asc").should == [s3, s1, s2]
+      expect(survey.sections.order("display_order asc")).to match_array( [s3, s1, s2] )
       survey.sections.order("display_order asc").map(&:display_order).should == [1,2,3]
     end
     it "gets survey_sections_with_questions in order" do
-      survey.sections.order("display_order asc").map{|ss| ss.questions.order("display_order asc")}.flatten.should have(4).questions
-      survey.sections.order("display_order asc").map{|ss| ss.questions.order("display_order asc")}.flatten.should == [q4,q1,q3,q2]
+      questions =  survey.sections.order("display_order asc").map{|ss| ss.questions.order("display_order asc")}.flatten
+      expect(questions).to match_array([q1, q2, q3, q4])
+
+      # survey.sections.order("display_order asc").map{|ss| ss.questions.order("display_order asc")}.flatten.should have(4).questions
+      # survey.sections.order("display_order asc").map{|ss| ss.questions.order("display_order asc")}.flatten.should == [q4,q1,q3,q2]
     end
     it "deletes child survey_sections when deleted" do
       survey_section_ids = survey.sections.map(&:id)
@@ -151,7 +163,7 @@ describe Survey do
       survey.translation(:es)[:title].should == "Un idioma nunca es suficiente"
     end
     it "returns its own default values" do
-      survey.translation(:de).should == {"title" => survey.title, "description" => survey.description}
+      survey.translation(:de).should == {title: survey.title, description: survey.description}
     end
   end
 end

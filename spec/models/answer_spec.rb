@@ -1,8 +1,15 @@
 # encoding: UTF-8
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe Answer do
-  let(:answer) { FactoryBot.create(:answer) }
+require 'rails_helper'
+
+# require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.join(__dir__, 'shared_examples')
+
+describe Answer, type: :model do
+  let(:the_survey) { create(:survey) }
+  let(:the_survey_section) { create(:survey_section, survey: the_survey) }
+  let(:q) { create(:question, survey_section: the_survey_section) }
+  let(:answer) { create(:answer, question: q) }
 
   context "when creating" do
 
@@ -17,6 +24,7 @@ describe Answer do
 
   context "with mustache text substitution" do
     require 'mustache'
+
     let(:mustache_context) { Class.new(::Mustache) {
       def site
         "Northwestern";
@@ -29,6 +37,7 @@ describe Answer do
       def foo
         "bar";
       end } }
+
     it "subsitutes Mustache context variables" do
       answer.text = "You are in {{site}}"
       answer.in_context(answer.text, mustache_context).should == "You are in Northwestern"
@@ -85,48 +94,19 @@ describe Answer do
     end
   end
 
-  context "handling strings" do
-    it "#split preserves strings" do
-      answer.split(answer.text).should == "My favorite color is clear"
-    end
-    it "#split(:pre) preserves strings" do
-      answer.split(answer.text, :pre).should == "My favorite color is clear"
-    end
-    it "#split(:post) preserves strings" do
-      answer.split(answer.text, :post).should == ""
-    end
-    it "#split splits strings" do
-      answer.text = "before|after|extra"
-      answer.split(answer.text).should == "before|after|extra"
-    end
-    it "#split(:pre) splits strings" do
-      answer.text = "before|after|extra"
-      answer.split(answer.text, :pre).should == "before"
-    end
-    it "#split(:post) splits strings" do
-      answer.text = "before|after|extra"
-      answer.split(answer.text, :post).should == "after|extra"
-    end
+
+
+  it_behaves_like 'split will split the text' do
+    let(:survey_item) { FactoryBot.create(:answer) }
   end
+
 
   context "for views" do
 
-    it "#text_for with #display_type == image" do
-      answer.text = "rails.png"
-      answer.display_type = :image
-      # answer.text_for.should =~ /<img alt="Rails" src="\/(images|assets)\/rails\.png" \/>/
-      text = answer.text_for
-      expect(text).to match(/<img\s+(.)*\/>/)
-      expect(text).to match(/alt="Rails"/)
-      expect(text).to match(/src="\/(images|assets)\/rails\.png"/)
+    it_behaves_like 'text_for' do
+      let(:survey_item) { answer }
     end
 
-    it "#text_for with #display_type == hidden_label" do
-      answer.text = "Red"
-      answer.text_for.should == "Red"
-      answer.display_type = "hidden_label"
-      answer.text_for.should == ""
-    end
 
     it "#default_value_for" do
       skip
@@ -147,31 +127,5 @@ describe Answer do
       answer.css_class.should == "exclusive foo bar"
     end
 
-    it "#text_for preserves strings" do
-      answer.text_for.should == "My favorite color is clear"
-    end
-
-    it "#text_for(:pre) preserves strings" do
-      answer.text_for(:pre).should == "My favorite color is clear"
-    end
-
-    it "#text_for(:post) preserves strings" do
-      answer.text_for(:post).should == ""
-    end
-
-    it "#text_for splits strings" do
-      answer.text = "before|after|extra"
-      answer.text_for.should == "before|after|extra"
-    end
-
-    it "#text_for(:pre) splits strings" do
-      answer.text = "before|after|extra"
-      answer.text_for(:pre).should == "before"
-    end
-
-    it "#text_for(:post) splits strings" do
-      answer.text = "before|after|extra"
-      answer.text_for(:post).should == "after|extra"
-    end
   end
 end

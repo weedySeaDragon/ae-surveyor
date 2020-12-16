@@ -1,10 +1,29 @@
 # encoding: UTF-8
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe QuestionGroup do
+require 'rails_helper'
+require 'yaml'
 
-  let(:question_group){ FactoryBot.create(:question_group) }
+describe QuestionGroup, type: :model do
+  let!(:survey) do
+    s = create(:survey)
+    s_translation = create(:survey_translation,
+                           locale: :es,
+                           survey: s,
+                           translation: {
+                             question_groups: {
+                               goodbye: {
+                                 text: "¡Adios!"
+                               }
+                             }
+                           }.to_yaml)
+    s.translations << s_translation
 
+    s
+  end
+  let(:survey_section) { build(:survey_section, survey: survey) }
+
+  let(:question_group) { build(:question_group) }
+  let(:question) { create(:question, survey_section: survey_section, question_group: question_group) }
 
   context 'when creating' do
 
@@ -38,41 +57,27 @@ describe QuestionGroup do
       allow(question_group).to receive(:dependent?).and_return(true)
       allow(question_group).to receive(:triggered?).and_return(false)
       question_group.custom_class = 'foo bar'
+
       expect(question_group.css_class('blorf')).to eq 'g_dependent g_hidden foo bar'
     end
   end
 
   context "with translations" do
-    require 'yaml'
-    let!(:survey){ FactoryBot.create(:survey) }
-    let(:survey_section){ FactoryBot.create(:survey_section) }
-    let(:survey_translation){
 
-      FactoryBot.create(:survey_translation, :locale => :es, survey: survey, :translation => {
-        :question_groups => {
-          :goodbye => {
-            :text => "¡Adios!"
-          }
-        }
-      }.to_yaml)
-    }
-
-    let(:question){ FactoryBot.create(:question) }
-    before do
-      question_group.text = "Goodbye"
-      question_group.reference_identifier = "goodbye"
-      question_group.questions = [question]
-      question.survey_section = survey_section
-      survey_section.survey = survey
-      survey.translations << survey_translation
+    let(:q_group) do
+      qgroup = create(:question_group, text: 'Goodbye', reference_identifier: 'goodbye')
+      qgroup.questions = [question]
+      question.question_group = qgroup
+      qgroup
     end
 
     it "returns its own translation" do
-      question_group.translation(:es)[:text].should == "¡Adios!"
+      # survey.translations << survey_translation
+      expect(q_group.translation(:es)[:text]).to eq "¡Adios!"
     end
 
     it "returns its own default values" do
-      question_group.translation(:de).should == {"text" => "Goodbye", "help_text" => nil}
+      expect(q_group.translation(:de)).to eq({ "text" => "Goodbye", "help_text" => nil })
     end
   end
 end
