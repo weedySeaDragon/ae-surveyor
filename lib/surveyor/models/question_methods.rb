@@ -14,15 +14,15 @@ module Surveyor
       included do
         # Associations
         belongs_to :survey_section
-        belongs_to :question_group, :dependent => :destroy, optional: true
-        has_many :answers, -> {includes :responses}, :dependent => :destroy # it might not always have answers
-        has_one :dependency, :dependent => :destroy
-        belongs_to :correct_answer, :class_name => "Answer", :dependent => :destroy, optional: true
+        belongs_to :question_group, dependent: :destroy, required: false
+        has_many :answers, -> {includes :responses}, dependent: :destroy # it might not always have answers
+        has_one :dependency, dependent: :destroy
+        belongs_to :correct_answer, class_name: "Answer", dependent: :destroy, required: false
         attr_accessible *PermittedParams.new.question_attributes if defined? ActiveModel::MassAssignmentSecurity
 
         # Validations
         validates_presence_of :text, :display_order
-        validates_inclusion_of :is_mandatory, :in => [true, false]
+        validates_inclusion_of :is_mandatory, in: [true, false]
       end
 
 
@@ -113,7 +113,7 @@ module Surveyor
 
 
       def translation(locale)
-        {:text => self.text, :help_text => self.help_text}.with_indifferent_access.merge(
+        {text: self.text, help_text: self.help_text}.with_indifferent_access.merge(
             (self.survey_section.survey.translation(locale)[:questions] || {})[self.reference_identifier] || {}
         )
       end

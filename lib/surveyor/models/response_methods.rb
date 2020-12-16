@@ -7,10 +7,13 @@ module Surveyor
       include ActiveModel::ForbiddenAttributesProtection
 
       included do
+
         # Associations
-        belongs_to :response_set
         belongs_to :question
         belongs_to :answer
+        belongs_to :response_set, optional: true
+        belongs_to :survey_section, optional: true
+
         attr_accessible *PermittedParams.new.response_attributes if defined? ActiveModel::MassAssignmentSecurity
 
         # Validations
@@ -18,6 +21,7 @@ module Surveyor
       end
 
       module ClassMethods
+
         def applicable_attributes(attrs)
           result = HashWithIndifferentAccess.new(attrs)
           answer_id = result[:answer_id].is_a?(Array) ? result[:answer_id].last : result[:answer_id] # checkboxes are arrays / radio buttons are not arrays

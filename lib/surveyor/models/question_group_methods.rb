@@ -73,7 +73,8 @@ module Surveyor
 
 
       def translation(locale)
-        { :text => self.text, :help_text => self.help_text }.with_indifferent_access.merge(
+        { text: self.text,
+          help_text: self.help_text }.with_indifferent_access.merge(
             (self.questions.first.survey_section.survey.translation(locale)[:question_groups] || {})[self.reference_identifier] || {}
         )
       end
