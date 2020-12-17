@@ -3,12 +3,12 @@ based on the HeH version of the surveyor gem, these are my modifications to upda
 
 ### Status
 
-current version: 1.5.2
+current version: 1.6.7
 
 ## Requirements
 
-- ruby 2.4.0
-- Rails >= 4.0
+- ruby 2.5.8
+- Rails >= 5.0
 - see other specific requirements in the `.gemspec`
 
 ---
