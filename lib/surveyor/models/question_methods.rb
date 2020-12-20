@@ -59,21 +59,17 @@ module Surveyor
 
 
       def dependent?
-        self.dependency != nil # FIXME: change to self.dependency.present?
+        self.dependency.present? # != nil
       end
 
       # FIXME: replace with self.dependency&.is_met?(response_set)
       def triggered?(response_set)
-        dependent? ? self.dependency.is_met?(response_set) : true
+        dependent? ? !!self.dependency&.is_met?(response_set) : true
       end
 
 
       def css_class(response_set)
         [(dependent? ? "q_dependent" : nil), (triggered?(response_set) ? nil : "q_hidden"), custom_class].compact.join(" ")
-        puts " ------ "
-        puts "  css_class:  #{response_set.inspect}"
-        puts "    q: #{self.inspect}"
-        puts " ------ "
       end
 
 

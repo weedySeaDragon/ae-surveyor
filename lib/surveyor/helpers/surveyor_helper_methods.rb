@@ -41,7 +41,6 @@ module Surveyor
         end
 
         "&nbsp;&nbsp;#{I18n.t('surveyor.your_answer')} &quot;#{trigger_responses.join("&quot; and &quot;")}&quot; #{I18n.t('surveyor.to_question')} &quot;#{dependent_questions.map(&:text).join("&quot;,&quot;")}&quot;"
-
       end
 
 
@@ -140,7 +139,6 @@ module Surveyor
         @rc ||= 0
         (increment ? @rc += 1 : @rc).to_s
       end
-
 
     end
   end
