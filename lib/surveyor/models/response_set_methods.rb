@@ -13,7 +13,6 @@ module Surveyor
 
         has_many :responses, -> { includes :answer }, :dependent => :destroy
 
-
         accepts_nested_attributes_for :responses, :allow_destroy => true
         attr_accessible *PermittedParams.new.response_set_attributes if defined? ActiveModel::MassAssignmentSecurity
 
@@ -31,40 +30,36 @@ module Surveyor
         def has_blank_value?(hash)
           return true if hash["answer_id"].blank?
           return false if (q = Question.find_by_id(hash["question_id"])) and q.pick == "one"
-          hash.any? {|k, v| v.is_a?(Array) ? v.all? {|x| x.to_s.blank?} : v.to_s.blank?}
+          hash.any? { |k, v| v.is_a?(Array) ? v.all? { |x| x.to_s.blank? } : v.to_s.blank? }
         end
       end
-
 
       def ensure_start_timestamp
         self.started_at ||= Time.now
       end
 
-
       def ensure_identifiers
         self.access_code ||= Surveyor::Common.make_tiny_code
-        self.api_id      ||= Surveyor::Common.generate_api_id
+        self.api_id ||= Surveyor::Common.generate_api_id
       end
-
 
       def to_csv(access_code = false, print_header = true)
         result = Surveyor::Common.csv_impl.generate do |csv|
           if print_header
             csv << (access_code ? ["response set access code"] : []) +
-                csv_question_columns.map {|qcol| "question.#{qcol}"} +
-                csv_answer_columns.map {|acol| "answer.#{acol}"} +
-                csv_response_columns.map {|rcol| "response.#{rcol}"}
+              csv_question_columns.map { |qcol| "question.#{qcol}" } +
+              csv_answer_columns.map { |acol| "answer.#{acol}" } +
+              csv_response_columns.map { |rcol| "response.#{rcol}" }
           end
           responses.each do |response|
             csv << (access_code ? [self.access_code] : []) +
-                csv_question_columns.map {|qcol| response.question.send(qcol)} +
-                csv_answer_columns.map {|acol| response.answer.send(acol)} +
-                csv_response_columns.map {|rcol| response.send(rcol)}
+              csv_question_columns.map { |qcol| response.question.send(qcol) } +
+              csv_answer_columns.map { |acol| response.answer.send(acol) } +
+              csv_response_columns.map { |rcol| response.send(rcol) }
           end
         end
         result
       end
-
 
       %w(question answer response).each do |model|
         define_method "csv_#{model}_columns" do
@@ -72,110 +67,93 @@ module Surveyor
         end
       end
 
-
       def as_json(options = nil)
         template_paths = ActionController::Base.view_paths.collect(&:to_path)
         Rabl.render(self, 'surveyor/show.json', :view_path => template_paths, :format => "hash")
       end
 
-
       def complete!
         self.completed_at = Time.now
       end
-
 
       def complete?
         !completed_at.nil?
       end
 
-
       def correct?
         responses.all?(&:correct?)
       end
 
-
       def correctness_hash
         { :questions => Survey.where(id: self.survey_id).includes(sections: :questions).first.sections.map(&:questions).flatten.compact.size,
           :responses => responses.compact.size,
-          :correct   => responses.find_all(&:correct?).compact.size
+          :correct => responses.find_all(&:correct?).compact.size
         }
       end
-
 
       def mandatory_questions_complete?
         progress_hash[:triggered_mandatory] == progress_hash[:triggered_mandatory_completed]
       end
 
-
       def progress_hash
-        qs        = Survey.where(id: self.survey_id).includes(sections: :questions).first.sections.map(&:questions).flatten
-        ds        = dependencies(qs.map(&:id))
-        triggered = qs - ds.select {|d| !d.is_met?(self)}.map(&:question)
-        { :questions                     => qs.compact.size,
-          :triggered                     => triggered.compact.size,
-          :triggered_mandatory           => triggered.select {|q| q.mandatory?}.compact.size,
-          :triggered_mandatory_completed => triggered.select {|q| q.mandatory? and is_answered?(q)}.compact.size
+        qs = Survey.where(id: self.survey_id).includes(sections: :questions).first.sections.map(&:questions).flatten
+        ds = dependencies(qs.map(&:id))
+        triggered = qs - ds.select { |d| !d.is_met?(self) }.map(&:question)
+        { :questions => qs.compact.size,
+          :triggered => triggered.compact.size,
+          :triggered_mandatory => triggered.select { |q| q.mandatory? }.compact.size,
+          :triggered_mandatory_completed => triggered.select { |q| q.mandatory? and is_answered?(q) }.compact.size
         }
       end
-
 
       def is_answered?(question)
         %w(label image).include?(question.display_type) or !is_unanswered?(question)
       end
 
-
       def is_unanswered?(question)
-        self.responses.detect {|r| r.question_id == question.id}.nil?
+        self.responses.detect { |r| r.question_id == question.id }.nil?
       end
-
 
       def is_group_unanswered?(group)
-        group.questions.any? {|question| is_unanswered?(question)}
+        group.questions.any? { |question| is_unanswered?(question) }
       end
-
 
       # Returns the number of response groups (count of group responses enterted) for this question group
       def count_group_responses(questions)
-        questions.map {|q|
-          responses.select {|r|
+        questions.map { |q|
+          responses.select { |r|
             (r.question_id.to_i == q.id.to_i) && !r.response_group.nil?
           }.group_by(&:response_group).size
         }.max
       end
 
-
       def unanswered_dependencies
         unanswered_question_dependencies + unanswered_question_group_dependencies
       end
 
-
       def unanswered_question_dependencies
-        dependencies.select {|d| d.question && self.is_unanswered?(d.question) && d.is_met?(self)}.map(&:question)
+        dependencies.select { |d| d.question && self.is_unanswered?(d.question) && d.is_met?(self) }.map(&:question)
       end
-
 
       def unanswered_question_group_dependencies
         dependencies.
-            select {|d| d.question_group && self.is_group_unanswered?(d.question_group) && d.is_met?(self)}.
-            map(&:question_group)
+          select { |d| d.question_group && self.is_group_unanswered?(d.question_group) && d.is_met?(self) }.
+          map(&:question_group)
       end
 
-
       def all_dependencies(question_ids = nil)
-        arr = dependencies(question_ids).partition {|d| d.is_met?(self)}
+        arr = dependencies(question_ids).partition { |d| d.is_met?(self) }
         {
-            :show => arr[0].map {|d| d.question_group_id.nil? ? "q_#{d.question_id}" : "g_#{d.question_group_id}"},
-            :hide => arr[1].map {|d| d.question_group_id.nil? ? "q_#{d.question_id}" : "g_#{d.question_group_id}"}
-            # :invalid => invalid_hash # :question_id => "message" - the questions which are invalid
+          :show => arr[0].map { |d| d.question_group_id.nil? ? "q_#{d.question_id}" : "g_#{d.question_group_id}" },
+          :hide => arr[1].map { |d| d.question_group_id.nil? ? "q_#{d.question_id}" : "g_#{d.question_group_id}" }
+          # :invalid => invalid_hash # :question_id => "message" - the questions which are invalid
         }
       end
 
-
       # Check existence of responses to questions from a given survey_section
       def no_responses_for_section?(section)
-        !responses.any? {|r| r.survey_section_id == section.id}
+        !responses.any? { |r| r.survey_section_id == section.id }
       end
-
 
       # ui_hash = parameters
       # the surveryor_gui gem created an answer type: a grid of checkboxes where many checked boxes for 1 questions are allowed
@@ -190,16 +168,16 @@ module Surveyor
             api_id = response_hash['api_id']
             fail "api_id missing from response #{ord}" unless api_id
 
-            existing  = Response.where(:api_id => api_id).first
+            existing = Response.where(:api_id => api_id).first
 
             if self.class.has_blank_value?(response_hash)
               existing.destroy if existing
             else
 
-              updateable_attributes = response_hash.reject {|k, v| k == 'api_id'}
+              updateable_attributes = response_hash.reject { |k, v| k == 'api_id' }
 
               # this is where we check for an clean up malformed attributes for the answer_id:
-              cleaned_up_answer_attributes =  fix_malformed_answer_ids updateable_attributes
+              cleaned_up_answer_attributes = fix_malformed_answer_ids updateable_attributes
               cleaned_up_answer_attributes['survey_section_id'] = Question.find(cleaned_up_answer_attributes['question_id']).survey_section.id
 
               if existing
@@ -223,7 +201,6 @@ module Surveyor
         end
       end
 
-
       protected
 
       def fix_malformed_answer_ids(attribute_params)
@@ -240,13 +217,12 @@ module Surveyor
         fixed_params
       end
 
-
       def dependencies(question_ids = nil)
         question_ids = survey.sections.map(&:questions).flatten.map(&:id) if responses.blank? and question_ids.blank?
-        deps         = Dependency.includes(:dependency_conditions).where({ :dependency_conditions => { :question_id => question_ids || responses.map(&:question_id) } })
+        deps = Dependency.joins(:dependency_conditions).where({ dependency_conditions: { question_id: question_ids || responses.map(&:question_id) } })
         # this is a work around for a bug in active_record in rails 2.3 which incorrectly eager-loads associatins when a
         # condition clause includes an association limiter
-        deps.each {|d| d.dependency_conditions.reload}
+        deps.each { |d| d.dependency_conditions.reload }
         deps
       end
     end
