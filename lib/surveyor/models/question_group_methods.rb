@@ -13,7 +13,7 @@ module Surveyor
 
       included do
 
-        has_many :questions
+        has_many :questions, -> { includes answers:  { validations: :validation_conditions } }
 
         has_one :dependency
 

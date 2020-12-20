@@ -15,7 +15,7 @@ module Surveyor
         # Associations
         belongs_to :survey_section
         belongs_to :question_group, dependent: :destroy, required: false
-        has_many :answers, -> {includes :responses}, dependent: :destroy # it might not always have answers
+        has_many :answers, -> { includes validations: :validation_conditions } , dependent: :destroy # it might not always have answers
         has_one :dependency, dependent: :destroy
         belongs_to :correct_answer, class_name: "Answer", dependent: :destroy, required: false
         attr_accessible *PermittedParams.new.question_attributes if defined? ActiveModel::MassAssignmentSecurity
@@ -59,10 +59,10 @@ module Surveyor
 
 
       def dependent?
-        self.dependency != nil
+        self.dependency != nil # FIXME: change to self.dependency.present?
       end
 
-
+      # FIXME: replace with self.dependency&.is_met?(response_set)
       def triggered?(response_set)
         dependent? ? self.dependency.is_met?(response_set) : true
       end
@@ -70,6 +70,10 @@ module Surveyor
 
       def css_class(response_set)
         [(dependent? ? "q_dependent" : nil), (triggered?(response_set) ? nil : "q_hidden"), custom_class].compact.join(" ")
+        puts " ------ "
+        puts "  css_class:  #{response_set.inspect}"
+        puts "    q: #{self.inspect}"
+        puts " ------ "
       end
 
 

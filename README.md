@@ -3,7 +3,7 @@ based on the HeH version of the surveyor gem, these are my modifications to upda
 
 ### Status
 
-current version: 1.6.7
+current version: 1.6.8
 
 ## Requirements
 
