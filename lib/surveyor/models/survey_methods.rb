@@ -15,14 +15,16 @@ module Surveyor
       included do
 
         # Associations
-        has_many :sections, -> { includes(questions: {answers: :responses}) }, class_name: 'SurveySection', :dependent => :destroy
+        has_many :sections,
+                 -> { includes(questions: { answers: { validations: :validation_conditions }, dependency: :dependency_conditions } ) },
+                 class_name: 'SurveySection', dependent: :destroy
         has_many :response_sets
-        has_many :translations, :class_name => "SurveyTranslation"
+        has_many :translations, class_name: "SurveyTranslation"
         attr_accessible *PermittedParams.new.survey_attributes if defined? ActiveModel::MassAssignmentSecurity
 
         # Validations
         validates_presence_of :title
-        validates_uniqueness_of :survey_version, :scope => :access_code, :message => "survey with matching access code and version already exists"
+        validates_uniqueness_of :survey_version, scope: :access_code, message: "survey with matching access code and version already exists"
 
         # Derived attributes
         before_save :generate_access_code
@@ -68,7 +70,7 @@ module Surveyor
 
       def as_json(options = nil)
         template_paths = ActionController::Base.view_paths.collect(&:to_path)
-        Rabl.render(filtered_for_json, 'surveyor/export.json', :view_path => template_paths, :format => "hash")
+        Rabl.render(filtered_for_json, 'surveyor/export.json', view_path: template_paths, format: "hash")
       end
 
       ##
@@ -87,7 +89,7 @@ module Surveyor
       end
 
       def increment_version
-        surveys = self.class.select(:survey_version).where(:access_code => access_code).order("survey_version DESC")
+        surveys = self.class.select(:survey_version).where(access_code: access_code).order("survey_version DESC")
         next_version = surveys.any? ? surveys.first.survey_version.to_i + 1 : 0
 
         self.survey_version = next_version
@@ -97,8 +99,8 @@ module Surveyor
       def translation(locale_symbol)
         # TODO cache the counter for translations; need a column
         if self.translations.where(locale: locale_symbol.to_s).count > 0
-          t = self.translations.where(:locale => locale_symbol.to_s).first
-          {:title => self.title, :description => self.description}.with_indifferent_access.merge(
+          t = self.translations.where(locale: locale_symbol.to_s).first
+          {title: self.title, description: self.description}.with_indifferent_access.merge(
             t ? YAML.load(t.translation || "{}").with_indifferent_access : {}
           )
         else

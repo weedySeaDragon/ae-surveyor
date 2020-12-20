@@ -7,7 +7,9 @@ module Surveyor
 
       included do
         # Associations
-        has_many :questions, -> { includes answers: :responses }, :dependent => :destroy
+        has_many :questions,
+                 -> { includes answers: { validations: :validation_conditions }, dependency: :dependency_conditions },
+                 dependent: :destroy
         belongs_to :survey
         attr_accessible *PermittedParams.new.survey_section_attributes if defined? ActiveModel::MassAssignmentSecurity
 
@@ -27,9 +29,9 @@ module Surveyor
 
       def questions_and_groups
         qs = []
-        questions.each_with_index.map do |q,i|
+        questions.each_with_index.map do |q, i|
           if q.part_of_group?
-            if (i+1 >= questions.size) or (q.question_group_id != questions[i+1].question_group_id)
+            if (i + 1 >= questions.size) or (q.question_group_id != questions[i + 1].question_group_id)
               q.question_group
             end
           else
@@ -39,7 +41,7 @@ module Surveyor
       end
 
       def translation(locale)
-        {:title => self.title, :description => self.description}.with_indifferent_access.merge(
+        { title: self.title, description: self.description }.with_indifferent_access.merge(
           (self.survey.translation(locale)[:survey_sections] || {})[self.reference_identifier] || {}
         )
       end

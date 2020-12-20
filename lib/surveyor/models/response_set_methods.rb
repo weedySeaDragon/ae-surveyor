@@ -11,7 +11,7 @@ module Surveyor
         belongs_to :survey
         belongs_to :user
 
-        has_many :responses, -> {includes :answer}, :dependent => :destroy
+        has_many :responses, -> { includes :answer }, :dependent => :destroy
 
 
         accepts_nested_attributes_for :responses, :allow_destroy => true
