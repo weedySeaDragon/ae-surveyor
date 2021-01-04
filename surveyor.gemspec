@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency('rails', '~> 5.2', '>= 5.2.4.4')
+  s.add_dependency('rails', '~> 5.0.0')
   s.add_dependency('rails-html-sanitizer', '>= 1.0.4') # vulnerability in 1.0.3
   s.add_dependency('haml', '>= 4.0')
   s.add_dependency('sass')
