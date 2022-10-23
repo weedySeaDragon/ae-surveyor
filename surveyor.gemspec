@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version = Surveyor::VERSION
 
   s.authors = ["Ashley Engelund", "Brian Chamberlain", "Mark Yoon"]
-  s.email = %q{ashley@ashleycaroline.com yoon@northwestern.edu}
+  s.email = %q{ashley.engelund@gmail.com yoon@northwestern.edu}
   s.homepage = %q{http://github.com/weedySeaDragon/ae-surveyor}
   # s.post_install_message = %q{Thanks for using surveyor! Remember to run the surveyor generator and migrate your database, even if you are upgrading.}
   s.summary = %q{A rails (gem) plugin to enable surveys in your application}
