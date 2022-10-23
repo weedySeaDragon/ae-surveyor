@@ -51,8 +51,8 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-    addressable (2.7.0)
-      public_suffix (>= 2.0.2, < 5.0)
+    addressable (2.8.1)
+      public_suffix (>= 2.0.2, < 6.0)
     arel (7.1.4)
     builder (3.2.4)
     capybara (3.34.0)
@@ -97,17 +97,17 @@ GEM
     multi_json (1.15.0)
     mustache (0.99.8)
     nio4r (2.5.8)
-    nokogiri (1.11.0-x86_64-darwin)
+    nokogiri (1.12.5-x86_64-linux)
       racc (~> 1.4)
     pg (1.2.3)
     poltergeist (1.18.1)
       capybara (>= 2.1, < 4)
       cliver (~> 0.3.1)
       websocket-driver (>= 0.2.0)
-    public_suffix (4.0.6)
+    public_suffix (4.0.7)
     rabl (0.14.3)
       activesupport (>= 2.3.14)
-    racc (1.5.2)
+    racc (1.6.0)
     rack (2.2.3)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -189,7 +189,7 @@ GEM
     yard (0.9.25)
 
 PLATFORMS
-  ruby
+  x86_64-linux
 
 DEPENDENCIES
   capybara (>= 2.2.1)
