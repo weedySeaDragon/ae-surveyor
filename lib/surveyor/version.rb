@@ -1,4 +1,4 @@
 module Surveyor
-  # minor changes only
-  VERSION = '1.8.2'.freeze
+  # fix javascript (const -> var [old style])
+  VERSION = '1.8.3'.freeze
 end
