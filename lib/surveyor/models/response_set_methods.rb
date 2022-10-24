@@ -27,10 +27,12 @@ module Surveyor
       end
 
       module ClassMethods
+
+        # FIXME params cannot use any? after Rails 5.1
         def has_blank_value?(hash)
           return true if hash["answer_id"].blank?
           return false if (q = Question.find_by_id(hash["question_id"])) and q.pick == "one"
-          hash.any? { |k, v| v.is_a?(Array) ? v.all? { |x| x.to_s.blank? } : v.to_s.blank? }
+          hash.any? { |_k, v| v.is_a?(Array) ? v.all? { |x| x.to_s.blank? } : v.to_s.blank? }
         end
       end
 
@@ -158,9 +160,11 @@ module Surveyor
       # ui_hash = parameters
       # the surveryor_gui gem created an answer type: a grid of checkboxes where many checked boxes for 1 questions are allowed
       # ( = the grid answer types)
-      # This can create invalid attribute paremeters (malformed) for a Response.  The answer_id can be set to an Array (!) in this case.
+      # This can create invalid attribute paremeters (malformed) for a Response.
+      # The answer_id can be set to an Array (!) in this case.
       # So must be able to handle that. (blech).  Will just take the last number in the Array if the answer_id => an Array
       #
+      #  FIXME - change the params structure/shape
       def update_from_ui_hash(ui_hash)
 
         transaction do
@@ -174,9 +178,9 @@ module Surveyor
               existing.destroy if existing
             else
 
-              updateable_attributes = response_hash.reject { |k, v| k == 'api_id' }
+              updateable_attributes = response_hash.reject { |k, _v| k == 'api_id' }
 
-              # this is where we check for an clean up malformed attributes for the answer_id:
+              # this is where we check for malformed attributes for the answer_id:
               cleaned_up_answer_attributes = fix_malformed_answer_ids updateable_attributes
               cleaned_up_answer_attributes['survey_section_id'] = Question.find(cleaned_up_answer_attributes['question_id']).survey_section.id
 
@@ -220,7 +224,7 @@ module Surveyor
       def dependencies(question_ids = nil)
         question_ids = survey.sections.map(&:questions).flatten.map(&:id) if responses.blank? and question_ids.blank?
         deps = Dependency.joins(:dependency_conditions).where({ dependency_conditions: { question_id: question_ids || responses.map(&:question_id) } })
-        # this is a work around for a bug in active_record in rails 2.3 which incorrectly eager-loads associatins when a
+        # this is a work around for a bug in active_record in rails 2.3 which incorrectly eager-loads associations when a
         # condition clause includes an association limiter
         deps.each { |d| d.dependency_conditions.reload }
         deps
