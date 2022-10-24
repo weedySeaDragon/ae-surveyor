@@ -143,7 +143,7 @@ RSpec.describe ResponseSet, type: :model do
   end
 
 
-  describe 'update_from_ui_hash' do
+  describe 'update_from_params' do
     # ui_hash = values coming in from the (a) UI, e.g. surveyor_gui gem
 
     let(:rs) { FactoryBot.create(:response_set, num_responses: 0) }
@@ -169,28 +169,28 @@ RSpec.describe ResponseSet, type: :model do
     shared_examples 'pick one or any' do
       it 'saves an answer alone' do
         ui_hash['3'] = ui_response('answer_id' => set_answer_id)
-        rs.update_from_ui_hash(ui_hash)
+        rs.update_from_params(ui_hash)
         results = first_response_in_set(rs, api_id)
         expect(results.answer.id).to eq answer.id
       end
 
       it 'preserves the question' do
         ui_hash['4'] = ui_response('answer_id' => set_answer_id)
-        rs.update_from_ui_hash(ui_hash)
+        rs.update_from_params(ui_hash)
         results = first_response_in_set(rs, api_id)
         expect(results.question.id).to eq do_you_like_pie.id
       end
 
       it 'interprets a blank answer as no response' do
         ui_hash['7'] = ui_response('answer_id' => blank_answer_id)
-        rs.update_from_ui_hash(ui_hash)
+        rs.update_from_params(ui_hash)
         results = first_response_in_set(rs, api_id)
         expect(results).to be_nil
       end
 
       it 'interprets no answer_id as no response' do
         ui_hash['8'] = ui_response
-        rs.update_from_ui_hash(ui_hash)
+        rs.update_from_params(ui_hash)
         results = first_response_in_set(rs, api_id)
         expect(results).to be_nil
       end
@@ -208,7 +208,7 @@ RSpec.describe ResponseSet, type: :model do
         describe "plus #{value_type}" do
           it 'saves the value' do
             ui_hash['11'] = ui_response('answer_id' => set_answer_id, value_type => set_value)
-            rs.update_from_ui_hash(ui_hash)
+            rs.update_from_params(ui_hash)
 
             # first_response_in_set.send(value_type).should == expected_value
             # results = first_response_in_set(rs, api_id)
@@ -217,7 +217,7 @@ RSpec.describe ResponseSet, type: :model do
 
           it 'interprets a blank answer as no response' do
             ui_hash['18'] = ui_response('answer_id' => blank_answer_id, value_type => set_value)
-            rs.update_from_ui_hash(ui_hash)
+            rs.update_from_params(ui_hash)
             results = first_response_in_set(rs, api_id)
             expect(results).to be_nil
           end
@@ -225,14 +225,14 @@ RSpec.describe ResponseSet, type: :model do
           it 'interprets a blank value as no response' do
             ui_hash['29'] = ui_response('answer_id' => set_answer_id,
                                         value_type => blank_value)
-            rs.update_from_ui_hash(ui_hash)
+            rs.update_from_params(ui_hash)
             results = first_response_in_set(rs, api_id)
             expect(results).to be_nil
           end
 
           it 'interprets no answer_id as no response' do
             ui_hash['8'] = ui_response(value_type => set_value)
-            rs.update_from_ui_hash(ui_hash)
+            rs.update_from_params(ui_hash)
             results = first_response_in_set(rs, api_id)
             expect(results).to be_nil
           end
@@ -243,7 +243,7 @@ RSpec.describe ResponseSet, type: :model do
     shared_examples 'response interpretation' do
       it 'fails when api_id is not provided' do
         ui_hash['0'] = { 'question_id' => do_you_like_pie.id }
-        expect { rs.update_from_ui_hash(ui_hash) }.to raise_error(/api_id missing from response 0/)
+        expect { rs.update_from_params(ui_hash) }.to raise_error(/api_id missing from response 0/)
       end
 
       describe 'for a radio button' do
@@ -292,7 +292,7 @@ RSpec.describe ResponseSet, type: :model do
         diff_question = create(:question, survey_section: surv_section)
         ui_hash['76'] = ui_response('question_id' => diff_question.id, 'answer_id' => answer_id.to_s)
 
-        expect { rs.update_from_ui_hash(ui_hash) }.to raise_error(/Illegal attempt to change question for response #{api_id}./)
+        expect { rs.update_from_params(ui_hash) }.to raise_error(/Illegal attempt to change question for response #{api_id}./)
       end
     end
 
@@ -303,7 +303,7 @@ RSpec.describe ResponseSet, type: :model do
       ui_hash['1'] = { 'answer_id' => '7' } # no api_id
 
       begin
-        rs.update_from_ui_hash(ui_hash)
+        rs.update_from_params(ui_hash)
         raise 'Expected error did not occur'
       rescue StandardError
       end

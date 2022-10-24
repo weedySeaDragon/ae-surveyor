@@ -149,7 +149,7 @@ module Surveyor
         if @response_set
           saved = true
           if params[:r]
-            saved = @response_set.update_from_ui_hash(params.require(:r).permit!)
+            saved = @response_set.update_from_params(params.require(:r).permit!)
           end
           if params[:finish]
             @response_set.complete!
@@ -296,6 +296,7 @@ module Surveyor
         session[:surveyor_javascript] = "not_enabled"
       end
     end
+
 
   end
 

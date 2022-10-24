@@ -26,15 +26,19 @@ module Surveyor
         before_create :ensure_identifiers
       end
 
+      # ----------------------------------------------------------------------------------------------------------------
+
       module ClassMethods
 
-        # FIXME params cannot use any? after Rails 5.1
+        # FIXME params cannot use any? after Rails 5.1. Will no longer inherit from Hash
         def has_blank_value?(hash)
           return true if hash["answer_id"].blank?
           return false if (q = Question.find_by_id(hash["question_id"])) and q.pick == "one"
-          hash.any? { |_k, v| v.is_a?(Array) ? v.all? { |x| x.to_s.blank? } : v.to_s.blank? }
+          hash.any? { |_k, v| v.is_a?(Array) ? v.all? { |x| x.to_s.blank? } : v.to_s.blank? } # hash value is an Array and the array is empty
         end
       end
+
+      # ----------------------------------------------------------------------------------------------------------------
 
       def ensure_start_timestamp
         self.started_at ||= Time.now
@@ -157,7 +161,7 @@ module Surveyor
         !responses.any? { |r| r.survey_section_id == section.id }
       end
 
-      # ui_hash = parameters
+
       # the surveryor_gui gem created an answer type: a grid of checkboxes where many checked boxes for 1 questions are allowed
       # ( = the grid answer types)
       # This can create invalid attribute paremeters (malformed) for a Response.
@@ -165,26 +169,26 @@ module Surveyor
       # So must be able to handle that. (blech).  Will just take the last number in the Array if the answer_id => an Array
       #
       #  FIXME - change the params structure/shape
-      def update_from_ui_hash(ui_hash)
+      def update_from_params(parameters)
 
         transaction do
-          ui_hash.each do |ord, response_hash|
+          parameters.each do |ord, response_hash|
             api_id = response_hash['api_id']
             fail "api_id missing from response #{ord}" unless api_id
 
-            existing = Response.where(:api_id => api_id).first
+            existing = Response.where(:api_id => api_id).first  # get the response for the given (unique) api_id
 
-            if self.class.has_blank_value?(response_hash)
+            if self.class.has_blank_value?(response_hash) #If the value is blank, remove the response Ex: a checkbox was unchecked, which means the response was undone/removed
               existing.destroy if existing
             else
 
               updateable_attributes = response_hash.reject { |k, _v| k == 'api_id' }
 
               # this is where we check for malformed attributes for the answer_id:
-              cleaned_up_answer_attributes = fix_malformed_answer_ids updateable_attributes
+              cleaned_up_answer_attributes = fix_malformed_answer_ids updateable_attributes # FIXME rename method 'fix_malformed_answer_ids' after revising it to handle updated parameter structure
               cleaned_up_answer_attributes['survey_section_id'] = Question.find(cleaned_up_answer_attributes['question_id']).survey_section.id
 
-              if existing
+              if existing # (existing Response; it wasn't an unchecked/unselected checkbox/radio)
                 if existing.question_id.to_s != cleaned_up_answer_attributes['question_id']
                   fail "Illegal attempt to change question for response #{api_id}."
                 end
@@ -205,8 +209,10 @@ module Surveyor
         end
       end
 
-      protected
+      # ----------------------------------------------------------------------------------------------------------------
 
+      protected
+      # FIXME removes empty answer arrays and sets answer_id to the value of the answer array
       def fix_malformed_answer_ids(attribute_params)
         ans_key = :answer_id
 
