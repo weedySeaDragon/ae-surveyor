@@ -187,7 +187,7 @@ describe SurveyorController, type: :controller  do
   #       responses_ui_hash['11'] = {'api_id' => 'something', 'answer_id' => '56', 'question_id' => '9'}
   #     end
   #     it "saves responses" do
-  #       response_set.should_receive(:update_from_ui_hash).with(responses_ui_hash)
+  #       response_set.should_receive(:update_from_params).with(responses_ui_hash)
   #       do_put(:r => responses_ui_hash)
   #     end
   #     it "does not fail when there are no responses" do
@@ -195,20 +195,20 @@ describe SurveyorController, type: :controller  do
   #     end
   #     context "with update exceptions" do
   #       it 'retries the update on a constraint violation' do
-  #         response_set.should_receive(:update_from_ui_hash).ordered.with(responses_ui_hash).and_raise(ActiveRecord::StatementInvalid.new('statement invalid'))
-  #         response_set.should_receive(:update_from_ui_hash).ordered.with(responses_ui_hash)
+  #         response_set.should_receive(:update_from_params).ordered.with(responses_ui_hash).and_raise(ActiveRecord::StatementInvalid.new('statement invalid'))
+  #         response_set.should_receive(:update_from_params).ordered.with(responses_ui_hash)
   #
   #         expect { do_put(:r => responses_ui_hash) }.to_not raise_error
   #       end
   #
   #       it 'only retries three times' do
-  #         response_set.should_receive(:update_from_ui_hash).exactly(3).times.with(responses_ui_hash).and_raise(ActiveRecord::StatementInvalid.new('statement invalid'))
+  #         response_set.should_receive(:update_from_params).exactly(3).times.with(responses_ui_hash).and_raise(ActiveRecord::StatementInvalid.new('statement invalid'))
   #
   #         expect { do_put(:r => responses_ui_hash) }.to raise_error(ActiveRecord::StatementInvalid)
   #       end
   #
   #       it 'does not retry for other errors' do
-  #         response_set.should_receive(:update_from_ui_hash).once.with(responses_ui_hash).and_raise('Bad news')
+  #         response_set.should_receive(:update_from_params).once.with(responses_ui_hash).and_raise('Bad news')
   #
   #         expect { do_put(:r => responses_ui_hash) }.to raise_error('Bad news')
   #       end

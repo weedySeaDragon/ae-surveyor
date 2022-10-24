@@ -68,11 +68,13 @@ module Surveyor
     end
 
 
+    # surveyor gem
     def edit
       # @response_set is set in before_action - set_response_set_and_render_context
       if @response_set
+        section_id = section_id_from(params)
         @sections = SurveySection.where(survey_id: @response_set.survey_id).includes([:survey, { questions: [{ answers: :question }, { question_group: :dependency }, :dependency] }])
-        @section  = (section_id_from(params) ? @sections.where(id: section_id_from(params)).first : @sections.first) || @sections.first
+        @section  = (section_id ? @sections.where(id:section_id).first : @sections.first) || @sections.first
         @survey   = @section.survey
         set_dependents
       else
@@ -83,7 +85,7 @@ module Surveyor
 
 
     def update
-      question_ids_for_dependencies = (params[:r] || []).map {|k, v| v["question_id"]}.compact.uniq
+      question_ids_for_dependencies = (params[:r] || []).map {|_k, v| v["question_id"]}.compact.uniq
       saved                         = load_and_update_response_set_with_retries
 
       return redirect_with_message(surveyor_finish, :notice, '') if saved && params[:finish] # t('surveyor.completed_survey')
@@ -94,7 +96,9 @@ module Surveyor
             return redirect_with_message(surveyor.available_surveys_path, :notice, t('surveyor.unable_to_find_your_responses'))
           else
             flash[:notice] = t('surveyor.unable_to_update_survey') unless saved
-            redirect_to surveyor.edit_my_survey_path(:anchor => anchor_from(params[:section]), :section => section_id_from(params))
+            section_id = section_id_from(params)
+            anchor =  anchor_from(params[:section])
+            redirect_to surveyor.edit_my_survey_path(anchor: anchor, section: section_id)
           end
         end
         format.js do
@@ -145,7 +149,7 @@ module Surveyor
         if @response_set
           saved = true
           if params[:r]
-            saved = @response_set.update_from_ui_hash(params.require(:r).permit!)
+            saved = @response_set.update_from_params(params.require(:r).permit!)
           end
           if params[:finish]
             @response_set.complete!
@@ -212,9 +216,13 @@ module Surveyor
     end
 
 
+    # surveyor gem
+    # FIXME need to change the parameters
     # Params: the name of some submit buttons store the section we'd like to go
-    # to. for repeater questions, an anchor to the repeater group is also stored
-    # e.g. params[:section] = {"1"=>{"question_group_1"=>"<= add row"}}
+    # to.
+    #   for repeater questions, an anchor to the repeater group is also stored
+    # e.g. params[:section] = { "1"=> {"question_group_1" => "add row"} }
+    # params[:section] == the section id
     def section_id_from(p = {})
       if p[:section] && p[:section].respond_to?(:keys)
         p[:section].keys.first
@@ -226,6 +234,11 @@ module Surveyor
     end
 
 
+    # first key of the first hash of the first key
+    # { first_key: {
+    #       first_key_of_hash_of_first_key: 'this key is what is returned'
+    #     }
+    # }
     def anchor_from(p)
       p.respond_to?(:keys) && p[p.keys.first].respond_to?(:keys) ? p[p.keys.first].keys.first : nil
     end
@@ -283,6 +296,7 @@ module Surveyor
         session[:surveyor_javascript] = "not_enabled"
       end
     end
+
 
   end
 
